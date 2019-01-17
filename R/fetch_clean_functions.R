@@ -32,8 +32,8 @@ getFiles <- function(path, pattern, full.names = TRUE) {
       warning("Both path and pattern arguments must be strings.")
    }
    fullpath <- list.files(path = path, pattern = pattern, full.names = TRUE)
-   dat <- map(fullpath, data.table::fread) # maybe import (export?) fread
-   dat <- map(dat, as.data.frame)
+   dat <- purrr::map(fullpath, data.table::fread) # maybe import (export?) fread
+   dat <- purrr::map(dat, as.data.frame)
 }
 
 #' Set column names for list of data frames
@@ -43,6 +43,10 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #' Once a list of data frames is generated with the getFiles function, use this
 #' function to set up the column names for each all the data frames in the list.
 #'
+#' Other functions in this package require that there be columns named "dT",
+#' "dx", and "dy". These name should be used for the change in time and distance
+#' variables.
+#'
 #' @param list A list of data frame objects.
 #' @param colnames A vector of strings holding the names for the columns.
 #' @examples
@@ -51,7 +55,7 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #' @export
 
 cleanNames <- function(list, colnames) {
-   map(list, setNames, colnames)
+   purrr::map_if(list, is.data.frame, setNames, colnames)
 }
 
 #' Thin data frames
@@ -77,7 +81,9 @@ cleanNames <- function(list, colnames) {
 #' values in length should be approximately equal to the sum of dT from the n
 #' rows aggregated over, i.e. if each observation from the un-thinned data is 10
 #' ms and the user aggregates these observations to 1 second, the value of
-#' length should be approximately 1.
+#' length should be approximately 1. Note that in thinning the data frame, the
+#' stimulus column will also be thinned. The stimulus status value at the start
+#' of the thinning will taken as the stimulus value for the aggregated data.
 #'
 #' @param list A list of data frame objects.
 #' @param n The number of consecutive rows to aggregate over.
@@ -86,7 +92,7 @@ cleanNames <- function(list, colnames) {
 #' @export
 
 thin <- function(list, n){
-   map(list, function(.x) {
+   purrr::map_if(list, is.data.frame, function(.x) {
       x <- cbind(aggregate(.x[, c("dT", "dx", "dy")],
                            list(rep(
                               1:(nrow(.x) %/% n + 1), each = n, len = nrow(.x)
@@ -97,8 +103,49 @@ thin <- function(list, n){
                               1:(nrow(.x) %/% n + 1), each = n, len = nrow(.x)
                            )),
                            length)[,-1])
-      colnames(x)[4] <- "length"
+      colnames(x)[4] <- "length" # add length column
+      x <- .x %>% # Add other identification columns corresponding to thinned
+         select(names(.x)[!(names(.x) %in% names(x))]) %>% # rows
+         .[seq(from = 1,
+                to = nrow(.x),
+                length.out = nrow(x)),
+            ] %>%
+         bind_cols(x) %>%
+         select(-enc1, -enc2, -enc3, id, dx, dy, everything()) %>%
+         select(everything())
+
       return(x)
    })
 }
 
+
+#' Merge trial id information
+#'
+#' This function merges trial id information with the servosphere data.
+#'
+#' Users of the servosphere will need a separate data frame with trial id
+#' information. This should contain a unique identifier and any other relevant
+#' experimental information, such as treatments applied, date, time of day, etc.
+#' Make sure the rows in your trial id data frame are ordered in the same order
+#' as the list of data frames of your servosphere output. This will also append
+#' and item to your list of data frames that contains the relevant column names
+#' to be retained in future manipulations of the data.
+#'
+#' @param trial.data The data frame containing your trial id information.
+#' @param col.names A string vector containing the names of the columns you want
+#'   to transfer to your servosphere output data.
+#' @param list The list of servosphere output data.
+#' @export
+
+mergeTrialInfo <- function(trial.data, col.names, list) {
+   trial.data <- dplyr::select(trial.data, col.names)
+   list.trial.data <- lapply(as.list(1:dim(trial.data)[1]),
+                                     function(x) trial.data[x[1], ])
+   list <- map2(list, list.trial.data, function(.x, .y) {
+      .y <- .y[rep(1, each = nrow(.x)), ]
+      .x <- bind_cols(.x, .y)
+      return(.x)
+   })
+   list[["col.names"]] <- col.names
+   return(list)
+}

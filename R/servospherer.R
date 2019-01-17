@@ -5,7 +5,7 @@
 #' @section Some_section_title:
 #' Blah blah blah
 #'
-#' @doctype package
+#' @docType package
 #' @name servospherer
 
 # Must have NULL for this to serve as the package help page.

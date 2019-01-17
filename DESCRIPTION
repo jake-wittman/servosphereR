@@ -3,7 +3,7 @@ Type: Package
 Title: Analyze Data from Servosphere Trials
 Version: 0.1.0
 Authors@R: person("Jacob T.", "Wittman", email = "wittja01@gmail.com", role = c("aut", "cre"))
-Description: This package provides functions to facilitate and speed up the analysis of data produced by a servosphere. 
+Description: This package provides functions to facilitate and speed up the analysis of data produced by a servosphere. This package is also designed to make working with data produced from a servosphere easy for someone new to or unfamiliar with R. 
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

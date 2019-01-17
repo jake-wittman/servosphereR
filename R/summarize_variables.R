@@ -1,0 +1,249 @@
+#' Calculate total path distance
+#'
+#' Calculate the total distance moved by an organism on the servosphere
+#'
+#' Determine the distance of a path taken by an organism on a servosphere.
+#'
+#' @param list A list of data frames, each of which has a column representing dx
+#'   and dy.
+#' @param summary.df The data frame object within which you are storing path
+#'   summary variables. The default is NA if you do not currently have a summary
+#'   data frame object started. When set to NA the function will create a new
+#'   summary data frame. When an object is provided, the function will merge the
+#'   summary data frame with the new data.
+#' @return A named vector of numbers where each number corresponds to the total
+#'   distance moved by an organism represented in the list of data frames. The
+#'   numbers are ordered and named as they are in the data frames list.
+#' @export
+
+summaryTotalDistance <- function(list, summary.df = NA) {
+   purrr::map_if(list, is.data.frame, function(.x) {
+      total_distance <- .x %>% select(distance) %>% sum()
+      out <- data.frame(id = .x$id[1],
+                        total_distance = total_distance)
+      if (any(!is.na(summary.df))){ # If summary.df is provided, join out with it
+         out <- inner_join(out, summary.df)
+      } else {
+         trial_cols <- .x %>%
+            select(!!list$col.names, stimulus, -id) %>%
+            slice(1)
+         out <- bind_cols(out, trial_cols)
+      }
+      return(out)
+   }) %>%
+      magrittr::extract(., 1:(length(.) - 1)) %>%
+      bind_rows()
+}
+
+#' Calculate net displacement
+#'
+#' Calculate the net displacement for a path taken by an organism
+#'
+#' Net displacement is the distance between the start of a path and the end of a
+#' path. This function calculates the net displacement for a path recorded from
+#' the servosphere.
+#'
+#' @param list A list of data frames, each of which has a column representing dx
+#'   and dy.
+#' @param summary.df The data frame object within which you are storing path
+#'   summary variables. The default is NA if you do not currently have a summary
+#'   data frame object started. When set to NA the function will create a new
+#'   summary data frame. When an object is provided, the function will merge the
+#'   summary data frame with the new data.
+#' @return A named vector of numbers where each number corresponds to the net
+#'   displacement of a movement path. The numbers are ordered and named as they
+#'   are in the data frames list.
+#' @export
+
+summaryNetDisplacement <- function(list, summary.df = NA) {
+   purrr::map_if(list, is.data.frame, function(.x) {
+     net_displacement <- sqrt((.x$x[nrow(.x)] ^ 2) + (.x$y[nrow(.x)] ^ 2))
+      out <- data.frame(id = .x$id[1],
+                        net_displacement = net_displacement)
+      if (any(!is.na(summary.df))) {
+         out <- inner_join(out, summary.df)
+      } else {
+         trial_cols <- .x %>%
+            select(!!list$col.names, stimulus, -id) %>%
+            slice(1)
+         out <- bind_cols(out, trial_cols)
+      }
+      return(out)
+   }) %>%
+      magrittr::extract(., 1:(length(.) - 1)) %>%
+      bind_rows()
+}
+
+#' Calculate tortuosity
+#'
+#' Calculate the tortuosity, or straightness, of a movement path
+#'
+#' Tortuosity is a measure of how straight a path is. There are different
+#' methods for calculating path straightness. This function calculates
+#' tortuosity as the quotient of net displacement and total distance by default.
+#' The quotient can be reversed by setting inverse to \code{TRUE}.
+#' @param summary.df The summary data frame containing total distance and net
+#'   displacement for all movement paths
+#' @param total.distance The unquoted variable name in a data frame containing
+#'   the total distance for all movement paths
+#' @param net.displacement The unquoted variable name in a data frame containing
+#'   the net displacement for all movement paths.
+#' @param inverse Defaults to \code{FALSE}. When set to \code{FALSE}, this
+#'   function calculates tortuosity as net displacement divided by total
+#'   distance. Setting inverse to \code{TRUE} causes the function to calculate
+#'   tortuosity as total distance divided by net displacement.
+#' @returns The inputed data frame of numbers where each number corresponds to
+#'   the tortuosity of a movement path. The numbers are ordered and named as
+#'   they are in the data frames list.
+#' @export
+
+summaryTortuosity <- function(summary.df,
+                              total.distance,
+                              net.displacement,
+                              inverse = FALSE) {
+   total.distance <- enquo(total.distance)
+   net.displacement <- enquo(net.displacement)
+   if (inverse == FALSE) {
+      summary.df <- summary.df %>%
+         mutate(tortuosity = !!net.displacement / !!total.distance)
+   }
+   else {
+      summary.df <- summary.df %>%
+         mutate(tortuosity = !!total.distance / !!net.displacement)
+   }
+
+   return(summary.df)
+}
+
+
+#' Calculate average bearing
+#'
+#' Calculate the average bearing, or direction of movement, for a movement path.
+#'
+#' The bearing is the direction of movement and and falls between 0 and 360.
+#' Outdoors, 0/360 will typically correspond to due north. For servosphere data,
+#' 0/360 will correspond to the  movement in the direction of the positive
+#' y-axis.
+#' @param list A list of data frames, each of which has a column for bearing.
+#' @return A list of two named vectors. The first named vector contains the
+#'   average bearing calculated for each movement path. The second named vector
+#'   contains the rho, a measure of concentration for the average bearing.
+#' @export
+#' @import magrittr
+
+
+summaryAvgBearing <- function(list, summary.df = NA) {
+   out <- list %>% purrr::map_if(is.data.frame, function(.x) {
+      b <- .x[!is.na(.x$bearing), "bearing"]
+      # Get mean bearing by converting to radians then back to degrees
+      r <- b * (pi / 180)
+      mean.r <- atan3((sum(sin(r))) / length(r),
+                      (sum(cos(r))) / length(r))
+      mean.c <- mean.r * (180 / pi)
+      if (mean.c < 0) {
+         mean.c <- 360 + mean.c
+      }
+      # Get rho, or strength of association
+      rho <- sqrt(((sum(sin(r))) / length(r)) ^ 2 +
+                     ((sum(cos(r))) / length(r)) ^ 2)
+      return(c(.x$id[1], mean.c, rho))
+   })
+   out <- magrittr::extract(out, 1:(length(out) - 1))
+   out <- unlist(out)
+   id <- out[seq(1, length(out), by = 3)]
+   circular.mean <- out[seq(2, (length(out) - 1), by = 3)]
+   circular.rho <- out[seq(3, (length(out) - 2), by = 3)]
+   out <- data.frame(id = id,
+                     circular_mean = circular.mean,
+                     circular_rho = circular.rho)
+   if (any(!is.na(summary.df))) {
+      out <- inner_join(out, summary.df)
+   } else {
+      trial_cols <- .x %>%
+         select(!!list$col.names, stimulus, -id) %>%
+         slice(1)
+      out <- bind_cols(out, trial_cols)
+   }
+}
+
+#' Calculate average velocity
+#'
+#' Calculate the average velocity for a movement path.
+#'
+#' Calculate the average velocity for a movement path. The units on velocity are
+#' equal to the distance units used to record the data per second.
+#' @param list A list of data frames, each of which has a column for bearing.
+#' @param summary.df The data frame object within which you are storing path
+#'   summary variables. The default is NA if you do not currently have a summary
+#'   data frame object started. When set to \code{NA} the function will create a new
+#' summary data frame. When an object is provided, the function will merge the
+#' summary data frame with the new data.
+#' @return The inputed summary data frame or a new data frame if summar.df is
+#'   \code{NA}
+#' @export
+#' @import magrittr
+summaryAvgVelocity <- function(list, summary.df) {
+   list %>% purrr::map_if(is.data.frame, function(.x) {
+      out <- data.frame(id = .x$id[1],
+                 avg_velocity = mean(.x$velocity, na.rm = TRUE))
+      if (any(!is.na(summary.df))) {
+         out <- inner_join(summary.df, out)
+      } else {
+         trial_cols <- .x %>%
+            select(!!list$col.names, stimulus, -id) %>%
+            slice(1)
+         out <- bind_cols(out, trial_cols)
+      }
+   }) %>%
+      magrittr::extract(., 1:(length(.) - 1)) %>%
+      bind_rows()
+}
+
+#' Summarize the number and length of stops
+#'
+#' Caulculate how many times an insect stopped walking during its recorded
+#' movement and the average length of those stops.
+#'
+#' This function evaluates a path for the total number of stops made during the
+#' recording, as well as the average length of those stops. The function
+#' requires the user to provide a movement threshold, below which the insect is
+#' considered to be stopped. The servosphere may record small movements of
+#' insect appendages or side to side motion as movement but typically this will
+#' be much slower than actual movement. Estimates of this threshold speed can be
+#' obtained by comparing recordings of the data to videos of the actual movement
+#' or in person observation.
+#' @param list A list of data frames, each of which must have a column recording
+#'   the velocity variable.
+#' @param summary.dat The data frame object within which you are storing path
+#'   summary variables. The default is NA if you do not currently have a summary
+#'   data frame object started. When set to \code{NA} the function will create a
+#'   new summary data frame. When an object is provided, the function will merge
+#'   the summary data frame with the new data.
+#' @param stop.threshold The velocity below which the insect is considered to be
+#'   stopped. The default is 0, but should be adjusted based on observations of
+#'   the insect and the recording equipment.
+#' @export
+#' @import magrittr
+summaryStops <- function(list, summary.df = NA, stop.threshold = 0) {
+   list %>% purrr::map_if(is.data.frame, function(.x) {
+      stops <- ifelse(.x$velocity <= stop.threshold, 0, .x$velocity)
+      stops <- rle(stops)
+      num_stops <- length(stops$lengths[stops$values == 0])
+      len_stops <- mean(stops$lengths[stops$values == 0])
+      out <- data.frame(id = .x$id[1],
+                        number_stops = num_stops,
+                        avg_length_stops = len_stops)
+      if (any(!is.na(summary.df))) {
+         out <- inner_join(summary.df, out)
+      } else {
+         trial_cols <- .x %>%
+            select(!!list$col.names, stimulus, -id) %>%
+            slice(1)
+         out <- bind_cols(out, trial_cols)
+      }
+   }) %>%
+      magrittr::extract(., 1:(length(.) - 1)) %>%
+      bind_rows()
+}
+
+
