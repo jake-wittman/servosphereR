@@ -4,8 +4,9 @@ source("./R/derived_variables.R")
 source("./R/fetch_clean_functions.R")
 source("./R/servospherer.R")
 source("./R/summarize_variables.R")
+# Test without stimulus split
 dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere.csv")
-trial_id <- read.csv("./inst/extdata/trial_id.csv")
+trial_id <- read.csv("./inst/extdata/trial_id.csv", stringsAsFactors = FALSE)
 dat <- cleanNames(dat,
               colnames = c("stimulus",
                            "dT",
@@ -33,3 +34,45 @@ summary_dat <- summaryAvgVelocity(dat, summary.df = summary_dat)
 summary_dat <- summaryStops(dat,
                                summary.df = summary_dat,
                                stop.threshold = 0.1)
+summary_dat
+
+# Test stimulus separate
+dat_stim_split <- getFiles(path = "./inst/extdata/", pattern = "_servosphere.csv")
+dat_stim_split <- cleanNames(dat_stim_split,
+                             colnames = c("stimulus",
+                                          "dT",
+                                          "dx",
+                                          "dy",
+                                          "enc1",
+                                          "enc2",
+                                          "enc3"))
+
+trial_id_split <- read.csv("./inst/extdata/trial_id_stimulus.csv",
+                           stringsAsFactors = FALSE)
+dat_stim_split <- mergeTrialInfo(trial_id_split,
+                                 c("treatment", "date"),
+                                 dat_stim_split,
+                                 stimulus.split = TRUE,
+                                 stimulus.keep = c(1, 2))
+dat_stim_split <- thin(dat_stim_split, n = 100)
+dat_stim_split <- calcXY(dat_stim_split)
+dat_stim_split <- calcDistance(dat_stim_split)
+dat_stim_split <- calcBearing(dat_stim_split)
+dat_stim_split <- calcVelocity(dat_stim_split)
+dat_stim_split <- calcTurnAngle(dat_stim_split)
+dat_stim_split <- calcTurnVelocity(dat_stim_split)
+summary_dat_split <- summaryTotalDistance(dat_stim_split)
+summary_dat_split <- summaryNetDisplacement(dat_stim_split,
+                                            summary.df = summary_dat_split)
+summary_dat_split <- summaryTortuosity(summary.df = summary_dat_split,
+                                       net.displacement = net_displacement,
+                                       total.distance = total_distance,
+                                       inverse = FALSE)
+summary_dat_split <- summaryAvgBearing(dat_stim_split,
+                                       summary.df = summary_dat_split)
+summary_dat_split <- summaryAvgVelocity(dat_stim_split,
+                                        summary.df = summary_dat_split)
+summary_dat_split <- summaryStops(dat_stim_split,
+                                  summary.df = summary_dat_split,
+                                  stop.threshold = 0.1)
+summary_dat_split

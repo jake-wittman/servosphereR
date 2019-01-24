@@ -118,26 +118,78 @@ thin <- function(list, n){
    })
 }
 
-
 #' Merge trial id information
 #'
 #' This function merges trial id information with the servosphere data.
 #'
 #' Users of the servosphere will need a separate data frame with trial id
-#' information. This should contain a unique identifier and any other relevant
-#' experimental information, such as treatments applied, date, time of day, etc.
-#' Make sure the rows in your trial id data frame are ordered in the same order
-#' as the list of data frames of your servosphere output. This will also append
-#' and item to your list of data frames that contains the relevant column names
-#' to be retained in future manipulations of the data.
+#' information in a column titled `id`. This should contain a unique identifier
+#' and any other relevant experimental information, such as treatments applied,
+#' date, time of day, etc. Make sure the rows in your trial id data frame are
+#' ordered in the same order as the list of data frames of your servosphere
+#' output. If the dataframes should be split by stimulus, the trial record
+#' dataframe should contain a column `id_stim` that lists the id number of the
+#' trial, followed by an underscore, followed by each value of the stimulus
+#' variable retained. In this case, the rows of the trial id dataframe should be
+#' ordered by `id` in the same order as the list of dataframes first and within
+#' unique `id` values, ordered numerically by the stimulus values to be
+#' retained. This function will also append an item to your list of data frames
+#' that contains the relevant column names to be retained in future
+#' manipulations of the data.
 #'
-#' @param trial.data The data frame containing your trial id information.
+#' @param trial.data The data frame containing your trial id information. This
+#'   must contain an identifier column titled `id` and if the data are to be
+#'   split by stimuli, an additional identifier column `id_stim`. See the
+#'   description for more details.
 #' @param col.names A string vector containing the names of the columns you want
 #'   to transfer to your servosphere output data.
 #' @param list The list of servosphere output data.
+#' @param stimulus.split A logical value indicating whether the dataframes
+#'   should be split by stimulus. Defaults to `FALSE`. If `TRUE`, be sure to
+#'   include a `id_stim` column to give each trial/stimulus combination a unique
+#'   ID.
+#' @param stimulus.keep An integer vector containing the stimuli numbers to
+#'   retain in the data and split the dataframes by. Omitted stimuli values will
+#'   be discarded.
 #' @export
 
-mergeTrialInfo <- function(trial.data, col.names, list) {
+mergeTrialInfo <- function(trial.data,
+                           col.names,
+                           list,
+                           stimulus.split = FALSE,
+                           stimulus.keep) {
+
+   if (stimulus.split == TRUE) {
+      id <- unique(trial.data$id)
+      list.id <- lapply(as.list(1:length(id)),
+                                function(x) x[[1]])
+      list <- map2(list, list.id, function(.x, .y) {
+         .y <- rep(.y, each = nrow(.x))
+         .x <- .x %>% mutate(id = .y)
+         return(.x)
+      })
+      out <- purrr::map_if(list, is.data.frame, function(.x) {
+         .x %>%
+            filter(stimulus %in% stimulus.keep) %>%
+            mutate(id_stim = as.character(paste0(id, "_", stimulus))) %>%
+            split(.$stimulus)
+      })
+      out <- flatten(out)
+      list.names <- map_chr(out, function(.x) {
+         .x$id_stim[1]
+      })
+      names(out) <- list.names
+      trial.data <- dplyr::select(trial.data, col.names)
+      list.trial.data <- lapply(as.list(1:dim(trial.data)[1]),
+                                function(x) trial.data[x[1], ])
+      list <- map2(out, list.trial.data, function(.x, .y) {
+         .y <- .y[rep(1, each = nrow(.x)), ]
+         .x <- bind_cols(.x, .y)
+         return(.x)
+      })
+      list[["col.names"]] <- c("id_stim", col.names)
+
+   } else {
    trial.data <- dplyr::select(trial.data, col.names)
    list.trial.data <- lapply(as.list(1:dim(trial.data)[1]),
                                      function(x) trial.data[x[1], ])
@@ -145,7 +197,9 @@ mergeTrialInfo <- function(trial.data, col.names, list) {
       .y <- .y[rep(1, each = nrow(.x)), ]
       .x <- bind_cols(.x, .y)
       return(.x)
-   })
-   list[["col.names"]] <- col.names
+      })
+   list[["col.names"]] <- c("id", col.names)
+   }
+
    return(list)
 }

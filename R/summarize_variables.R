@@ -18,16 +18,40 @@
 
 summaryTotalDistance <- function(list, summary.df = NA) {
    purrr::map_if(list, is.data.frame, function(.x) {
-      total_distance <- .x %>% select(distance) %>% sum()
-      out <- data.frame(id = .x$id[1],
-                        total_distance = total_distance)
+      total_distance <- .x %>%
+         select(distance) %>%
+         sum()
+      if (any(names(.x) == "id_stim")) {
+         out <- data.frame(id_stim = .x$id_stim[1],
+                           total_distance = total_distance,
+                           stringsAsFactors = FALSE)
+      } else{
+         out <- data.frame(id = .x$id[1],
+                           total_distance = total_distance,
+                           stringsAsFactors = FALSE)
+      }
+
       if (any(!is.na(summary.df))){ # If summary.df is provided, join out with it
-         out <- inner_join(out, summary.df)
+         # If data are split by stimulus, need to join by id_stim
+         if (any(names(.x) == "id_stim")) {
+            out <- inner_join(out, summary.df, by = "id_stim")
+         } else {
+            out <- inner_join(out, summary.df, by = "id")
+         }
+
       } else {
-         trial_cols <- .x %>%
-            select(!!list$col.names, stimulus, -id) %>%
-            slice(1)
-         out <- bind_cols(out, trial_cols)
+         if (any(names(.x) == "id_stim")) {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id_stim) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         } else {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         }
+
       }
       return(out)
    }) %>%
@@ -58,16 +82,38 @@ summaryTotalDistance <- function(list, summary.df = NA) {
 summaryNetDisplacement <- function(list, summary.df = NA) {
    purrr::map_if(list, is.data.frame, function(.x) {
      net_displacement <- sqrt((.x$x[nrow(.x)] ^ 2) + (.x$y[nrow(.x)] ^ 2))
-      out <- data.frame(id = .x$id[1],
-                        net_displacement = net_displacement)
-      if (any(!is.na(summary.df))) {
-         out <- inner_join(out, summary.df)
-      } else {
-         trial_cols <- .x %>%
-            select(!!list$col.names, stimulus, -id) %>%
-            slice(1)
-         out <- bind_cols(out, trial_cols)
-      }
+     if (any(names(.x) == "id_stim")) {
+        out <- data.frame(id_stim = .x$id_stim[1],
+                          net_displacement = net_displacement,
+                          stringsAsFactors = FALSE)
+     } else{
+        out <- data.frame(id = .x$id[1],
+                          net_displacement = net_displacement,
+                          stringsAsFactors = FALSE)
+     }
+
+     if (any(!is.na(summary.df))){ # If summary.df is provided, join out with it
+        # If data are split by stimulus, need to join by id_stim
+        if (any(names(.x) == "id_stim")) {
+           out <- inner_join(out, summary.df, by = "id_stim")
+        } else {
+           out <- inner_join(out, summary.df, by = "id")
+        }
+
+     } else {
+        if (any(names(.x) == "id_stim")) {
+           trial_cols <- .x %>%
+              select(!!list$col.names, stimulus, -id_stim) %>%
+              slice(1)
+           out <- bind_cols(out, trial_cols)
+        } else {
+           trial_cols <- .x %>%
+              select(!!list$col.names, stimulus, -id) %>%
+              slice(1)
+           out <- bind_cols(out, trial_cols)
+        }
+
+     }
       return(out)
    }) %>%
       magrittr::extract(., 1:(length(.) - 1)) %>%
@@ -146,24 +192,73 @@ summaryAvgBearing <- function(list, summary.df = NA) {
       # Get rho, or strength of association
       rho <- sqrt(((sum(sin(r))) / length(r)) ^ 2 +
                      ((sum(cos(r))) / length(r)) ^ 2)
-      return(c(.x$id[1], mean.c, rho))
+      if (any(names(.x) == "id_stim")) {
+         return(c(.x$id_stim[1], mean.c, rho))
+      } else {
+         return(c(.x$id[1], mean.c, rho))
+      }
    })
+
+
    out <- magrittr::extract(out, 1:(length(out) - 1))
    out <- unlist(out)
-   id <- out[seq(1, length(out), by = 3)]
-   circular.mean <- out[seq(2, (length(out) - 1), by = 3)]
-   circular.rho <- out[seq(3, (length(out) - 2), by = 3)]
-   out <- data.frame(id = id,
-                     circular_mean = circular.mean,
-                     circular_rho = circular.rho)
-   if (any(!is.na(summary.df))) {
-      out <- inner_join(out, summary.df)
-   } else {
-      trial_cols <- .x %>%
-         select(!!list$col.names, stimulus, -id) %>%
-         slice(1)
-      out <- bind_cols(out, trial_cols)
+   id <- unname(out[seq(1, length(out), by = 3)])
+   circular.mean <-
+      unname(out[seq(2, (length(out) - 1), by = 3)])
+   circular.rho <- unname(out[seq(3, (length(out) - 0), by = 3)])
+   if (any(names(list[[1]]) == "id_stim")) {
+      out <- data.frame(
+         id_stim = id,
+         circular_mean = circular.mean,
+         circular_rho = circular.rho,
+         stringsAsFactors = FALSE
+      )
+   } else{
+      out <- data.frame(
+         id = id,
+         circular_mean = circular.mean,
+         circular_rho = circular.rho,
+         stringsAsFactors = FALSE
+      )
    }
+
+
+   if (any(!is.na(summary.df))) {
+      # If summary.df is provided, join out with it
+      # If data are split by stimulus, need to join by id_stim
+      if (any(names(list[[1]]) == "id_stim")) {
+         out <- inner_join(out, summary.df, by = "id_stim")
+      } else {
+         out <- inner_join(out, summary.df, by = "id")
+      }
+
+   } else {
+      if (any(names(list[[1]]) == "id_stim")) {
+         trial_cols <- list %>%
+            map_if(is.data.frame, function(.x) {
+               .x %>%
+                  select(!!list$col.names, stimulus, -id_stim) %>%
+                  slice(1)
+            })
+         trial_cols <- trial_cols %>%
+            magrittr::extract(-length(.)) %>%
+            bind_rows
+         out <- bind_cols(out, trial_cols)
+      } else {
+         trial_cols <- list %>%
+            map_if(is.data.frame, function(.x) {
+               .x %>%
+                  select(!!list$col.names, stimulus, -id) %>%
+                  slice(1)
+            })
+         trial_cols <- trial_cols %>%
+            magrittr::extract(-length(.)) %>%
+            bind_rows
+         out <- bind_cols(out, trial_cols)
+      }
+      return(out)
+   }
+
 }
 
 #' Calculate average velocity
@@ -185,19 +280,44 @@ summaryAvgBearing <- function(list, summary.df = NA) {
 summaryAvgVelocity <- function(list, summary.df) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       out <- data.frame(id = .x$id[1],
-                 avg_velocity = mean(.x$velocity, na.rm = TRUE))
-      if (any(!is.na(summary.df))) {
-         out <- inner_join(summary.df, out)
+                 avg.velocity = mean(.x$velocity, na.rm = TRUE))
+      if (any(names(.x) == "id_stim")) {
+         out <- data.frame(id_stim = .x$id_stim[1],
+                           avg_velocity = out$avg.velocity,
+                           stringsAsFactors = FALSE)
+      } else{
+         out <- data.frame(id = .x$id[1],
+                           avg_velocity = out$avg.velocity,
+                           stringsAsFactors = FALSE)
+      }
+
+      if (any(!is.na(summary.df))){ # If summary.df is provided, join out with it
+         # If data are split by stimulus, need to join by id_stim
+         if (any(names(.x) == "id_stim")) {
+            out <- inner_join(out, summary.df, by = "id_stim")
+         } else {
+            out <- inner_join(out, summary.df, by = "id")
+         }
+
       } else {
-         trial_cols <- .x %>%
-            select(!!list$col.names, stimulus, -id) %>%
-            slice(1)
-         out <- bind_cols(out, trial_cols)
+         if (any(names(.x) == "id_stim")) {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id_stim) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         } else {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         }
       }
    }) %>%
       magrittr::extract(., 1:(length(.) - 1)) %>%
       bind_rows()
+
 }
+
 
 #' Summarize the number and length of stops
 #'
@@ -233,13 +353,38 @@ summaryStops <- function(list, summary.df = NA, stop.threshold = 0) {
       out <- data.frame(id = .x$id[1],
                         number_stops = num_stops,
                         avg_length_stops = len_stops)
-      if (any(!is.na(summary.df))) {
-         out <- inner_join(summary.df, out)
+      if (any(names(.x) == "id_stim")) {
+         out <- data.frame(id_stim = .x$id_stim[1],
+                           number_stops = num_stops,
+                           avg_length_stops = len_stops,
+                           stringsAsFactors = FALSE)
+      } else{
+         out <- data.frame(id = .x$id[1],
+                           number_stops = num_stops,
+                           avg_length_stops = len_stops,
+                           stringsAsFactors = FALSE)
+      }
+
+      if (any(!is.na(summary.df))){ # If summary.df is provided, join out with it
+         # If data are split by stimulus, need to join by id_stim
+         if (any(names(.x) == "id_stim")) {
+            out <- inner_join(out, summary.df, by = "id_stim")
+         } else {
+            out <- inner_join(out, summary.df, by = "id")
+         }
+
       } else {
-         trial_cols <- .x %>%
-            select(!!list$col.names, stimulus, -id) %>%
-            slice(1)
-         out <- bind_cols(out, trial_cols)
+         if (any(names(.x) == "id_stim")) {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id_stim) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         } else {
+            trial_cols <- .x %>%
+               select(!!list$col.names, stimulus, -id) %>%
+               slice(1)
+            out <- bind_cols(out, trial_cols)
+         }
       }
    }) %>%
       magrittr::extract(., 1:(length(.) - 1)) %>%
