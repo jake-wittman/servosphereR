@@ -1,65 +1,50 @@
 ---
-title: "Servospherer: A Package for Analyzing Servosphere Data"
+title: "ballr: A Package for Analyzing SynTech Servosphere Data"
 author: "Jacob T. Wittman"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: /Users/wittm094/Documents/library.bib
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{ballr: A Package for Analyzing SynTech Servosphere Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+## Introduction
+
+A servosphere, or locomotory compensator, is a device that can be used to study
+the movement of insects or other small critters. A servosphere is a sphere, on
+top of which an insect is placed. A camera pointed at the top of the sphere
+watches the insect as it moves and reports position changes to motors positioned
+at the base of the ball. As the insect moves, the motors rotate to keep the
+insect positioned at the top of the sphere. Locomotory compensators have been
+used in a number of studies of insect movement in response to different stimuli
+[@Arnold2016; @Becher2009; @Bell1980; @Noldus2002; @Otalora-Luna2011;
+@Otalora-Luna2011a; @Otalora-Luna2013; @Party2013; @Sakuma2002].
+
+This package is written specifically to aid with the analysis of data produced
+by a SynTech Servosphere [product
+website](http://www.ockenfels-syntech.com/products/locomotion-compensation/).
+The software provided by with the servosphere can be used for some analyses, but
+other, more complicated analyses require working with the raw .csv files
+produced during trial recording. This package is the result of my own work
+analyzing servosphere data in R for my Master's thesis in the Forest Entomology
+lab of the Entomology Department at the University of Minnesota. This short
+vignette will describe the .csv output available from the servosphere software
+and provide examples of potential work flows for these data.
+
+## Raw Servosphere Data
+
+After each trial recorded by the servosphere, the user can (and should) save the recorded .csv file. The first few rows of one of these .csv files will look like this when first imported into R.
+
+```{r}
+dat <- read.csv("ballr/inst/ext/317_03212018_servosphere.csv")
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+- Describe servosphere
+- Give examples of papers that have used servosphere
+- Describe the data output by the servosphere
+- Discuss potential experimental designs of interest
+- Describe work flow of the package with examples
+- Possibilites for expansions?

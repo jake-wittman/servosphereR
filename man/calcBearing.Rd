@@ -6,6 +6,27 @@
 \usage{
 calcBearing(list)
 }
+\arguments{
+\item{list}{A list of data frames with separate columns for x and y
+coordinate values.}
+}
+\value{
+A list of data frames with a column for the bearing of the organism
+  at each time step.
+}
 \description{
 Calculates the bearing (direction of movement) for each time step
+}
+\details{
+This function requires that the data has been previously processed with the
+\code{calcXY()} function, providing (x, y) coordinates. Calculate the
+direction moved by the organism relative to the y axis between each time step
+in your data frames.
+
+If the data will be thinned, it is recommended to thin the data before
+running this function.
+}
+\examples{
+# Provide a list of data frames with two columns for the (x, y) coordinates
+dat <- calcBearing(dat)
 }

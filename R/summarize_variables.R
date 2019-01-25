@@ -2,7 +2,7 @@
 #'
 #' Calculate the total distance moved by an organism on the servosphere
 #'
-#' Determine the distance of a path taken by an organism on a servosphere.
+#' Determine the total distance of a path taken by an organism on a servosphere.
 #'
 #' @param list A list of data frames, each of which has a column representing dx
 #'   and dy.
@@ -14,7 +14,13 @@
 #' @return A named vector of numbers where each number corresponds to the total
 #'   distance moved by an organism represented in the list of data frames. The
 #'   numbers are ordered and named as they are in the data frames list.
+#' @examples
+#' # If a summary data frame has not been started
+#' summary_df <- summaryTotalDistance(dat, summary.df = NA)
+#' # If a summary data frame has been started
+#' summary_df <- summaryTotalDistance(dat, summary.df = summary_df)
 #' @export
+#' @import magrittr dplyr
 
 summaryTotalDistance <- function(list, summary.df = NA) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -77,7 +83,14 @@ summaryTotalDistance <- function(list, summary.df = NA) {
 #' @return A named vector of numbers where each number corresponds to the net
 #'   displacement of a movement path. The numbers are ordered and named as they
 #'   are in the data frames list.
+#' @examples
+#' # If a summary data frame has not been started
+#' summary_df <- summaryNetDisplacement(dat, summary.df = NA)
+#' # If a summary data frame has been started
+#' summary_df <- summaryNetDisplacement(dat, summary.df = summary_df)
+#'
 #' @export
+#' @import magrittr dplyr
 
 summaryNetDisplacement <- function(list, summary.df = NA) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -124,10 +137,16 @@ summaryNetDisplacement <- function(list, summary.df = NA) {
 #'
 #' Calculate the tortuosity, or straightness, of a movement path
 #'
+#' To use this function, a summary data frame must already exist containing a
+#' column for total distance and net displacement (in other words, your data
+#' should have been processed by \code{summaryTotalDistance} and
+#' \code{summaryNetDisplacement}.
+#'
 #' Tortuosity is a measure of how straight a path is. There are different
 #' methods for calculating path straightness. This function calculates
 #' tortuosity as the quotient of net displacement and total distance by default.
 #' The quotient can be reversed by setting inverse to \code{TRUE}.
+#'
 #' @param summary.df The summary data frame containing total distance and net
 #'   displacement for all movement paths
 #' @param total.distance The unquoted variable name in a data frame containing
@@ -138,10 +157,16 @@ summaryNetDisplacement <- function(list, summary.df = NA) {
 #'   function calculates tortuosity as net displacement divided by total
 #'   distance. Setting inverse to \code{TRUE} causes the function to calculate
 #'   tortuosity as total distance divided by net displacement.
-#' @returns The inputed data frame of numbers where each number corresponds to
+#' @return The inputed data frame of numbers where each number corresponds to
 #'   the tortuosity of a movement path. The numbers are ordered and named as
 #'   they are in the data frames list.
+#' @examples
+#' # Calculate tortuosity as the ratio of net displacement to total distance
+#' summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement)
+#' # Calculate tortuosity as the ratio of total distance to net displacement (the opposite of the previous example)
+#' summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement, inverse = TRUE)
 #' @export
+#' @import magrittr dplyr
 
 summaryTortuosity <- function(summary.df,
                               total.distance,
@@ -167,15 +192,22 @@ summaryTortuosity <- function(summary.df,
 #' Calculate the average bearing, or direction of movement, for a movement path.
 #'
 #' The bearing is the direction of movement and and falls between 0 and 360.
-#' Outdoors, 0/360 will typically correspond to due north. For servosphere data,
-#' 0/360 will correspond to the  movement in the direction of the positive
-#' y-axis.
+#' Outdoors degree measures of 0/360 will typically correspond to due north. For
+#' servosphere data, 0/360 will correspond to the  movement in the direction of
+#' the positive y-axis.
 #' @param list A list of data frames, each of which has a column for bearing.
+#' @param summary.df The summary data frame containing total distance and net
+#'   displacement for all movement paths
 #' @return A list of two named vectors. The first named vector contains the
 #'   average bearing calculated for each movement path. The second named vector
 #'   contains the rho, a measure of concentration for the average bearing.
+#' @examples
+#' # If a summary data frame has not been started
+#' summary_df <- summaryAvgBearing(dat, summary.df = NA)
+#' # If a summary data frame has been started
+#' summary_df <- summaryAvgBearing(dat, summary.df = summary_df)
 #' @export
-#' @import magrittr
+#' @import magrittr dplyr
 
 
 summaryAvgBearing <- function(list, summary.df = NA) {
@@ -273,11 +305,16 @@ summaryAvgBearing <- function(list, summary.df = NA) {
 #'   data frame object started. When set to \code{NA} the function will create a new
 #' summary data frame. When an object is provided, the function will merge the
 #' summary data frame with the new data.
-#' @return The inputed summary data frame or a new data frame if summar.df is
+#' @return The inputed summary data frame or a new data frame if summary.df is
 #'   \code{NA}
+#' @examples
+#' # If a summary data frame has not been started
+#' summary_df <- summaryAvgVelocity(dat, summary.df = NA)
+#' # If a summary data frame has been started
+#' summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)
 #' @export
-#' @import magrittr
-summaryAvgVelocity <- function(list, summary.df) {
+#' @import magrittr dplyr
+summaryAvgVelocity <- function(list, summary.df = NA) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       out <- data.frame(id = .x$id[1],
                  avg.velocity = mean(.x$velocity, na.rm = TRUE))
@@ -342,8 +379,15 @@ summaryAvgVelocity <- function(list, summary.df) {
 #' @param stop.threshold The velocity below which the insect is considered to be
 #'   stopped. The default is 0, but should be adjusted based on observations of
 #'   the insect and the recording equipment.
+#' @examples
+#' # If a summary data frame has not been started with movement less than 0.1
+#' # cm/s qualifying as a stop
+#' summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.1)
+#' # If a summary data frame has been started with movement less than 0.05 cm/s
+#' # qualifying as a stop
+#' summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.05)
 #' @export
-#' @import magrittr
+#' @import magrittr dplyr
 summaryStops <- function(list, summary.df = NA, stop.threshold = 0) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       stops <- ifelse(.x$velocity <= stop.threshold, 0, .x$velocity)

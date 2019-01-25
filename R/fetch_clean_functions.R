@@ -17,11 +17,13 @@
 #'
 #' This function makes use of the data.table package to read in the .csv files,
 #' as it is currently the fastest way to bring in such files. This function is
-#' noticeably slower using alternatives when the number of .csv files is large.
+#' noticeably slower when alternative csv reading functions are used and when
+#' the number of .csv files is large.
 #'
 #' @param path A string for the file path.
 #' @param pattern A string with a unique pattern to look for in file names.
-#' @param full.names Return the full file path when TRUE or the file name when FALSE.
+#' @param full.names Return the full file path when TRUE or the file name when
+#'   FALSE.
 #' @return A list where each item is a data.table
 #' @examples
 #' getFiles("./data/", pattern = "_servosphere.csv")
@@ -32,7 +34,7 @@ getFiles <- function(path, pattern, full.names = TRUE) {
       warning("Both path and pattern arguments must be strings.")
    }
    fullpath <- list.files(path = path, pattern = pattern, full.names = TRUE)
-   dat <- purrr::map(fullpath, data.table::fread) # maybe import (export?) fread
+   dat <- purrr::map(fullpath, data.table::fread)
    dat <- purrr::map(dat, as.data.frame)
 }
 
@@ -41,14 +43,15 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #' Take a list of data frames and change the column names
 #'
 #' Once a list of data frames is generated with the getFiles function, use this
-#' function to set up the column names for each all the data frames in the list.
+#' function to set up the column names for all the data frames in the list.
 #'
-#' Other functions in this package require that there be columns named "dT",
-#' "dx", and "dy". These name should be used for the change in time and distance
-#' variables.
+#' Other functions in this package require that the change in time and position
+#' columns are named "dT", "dx", and "dy", respectively.
 #'
 #' @param list A list of data frame objects.
 #' @param colnames A vector of strings holding the names for the columns.
+#' @return Returns the list of data frames provided with the column names
+#'   modified based on the provided vector \code{colnames}.
 #' @examples
 #' colnames <- c("stimulus", "dT", "dx", "dy", "enc1", "enc2", "enc3")
 #' cleanNames(dat_list, colnames)
@@ -82,14 +85,19 @@ cleanNames <- function(list, colnames) {
 #' rows aggregated over, i.e. if each observation from the un-thinned data is 10
 #' ms and the user aggregates these observations to 1 second, the value of
 #' length should be approximately 1. Note that in thinning the data frame, the
-#' stimulus column will also be thinned. The stimulus status value at the start
-#' of the thinning will taken as the stimulus value for the aggregated data.
+#' stimulus column will also be thinned. The stimulus status value at the first
+#' row to be aggregated will become the value of the stimulus for the aggregated
+#' row.
 #'
 #' @param list A list of data frame objects.
 #' @param n The number of consecutive rows to aggregate over.
-#' @return A list of thinned data frames with an additional column, length, to
-#'   check that the function worked.
+#' @return A list of thinned data frames with an additional column,
+#'   \code{length}, to check that the function worked.
+#' @examples
+#' dat <- thin(dat, n = 100) # Aggregates every 100 rows in each data frame.
+#' dat <- thin(dat, n = 60) # Aggregates every 60 rows in each data frame.
 #' @export
+#' @import magrittr dplyr
 
 thin <- function(list, n){
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -123,39 +131,74 @@ thin <- function(list, n){
 #' This function merges trial id information with the servosphere data.
 #'
 #' Users of the servosphere will need a separate data frame with trial id
-#' information in a column titled `id`. This should contain a unique identifier
-#' and any other relevant experimental information, such as treatments applied,
-#' date, time of day, etc. Make sure the rows in your trial id data frame are
-#' ordered in the same order as the list of data frames of your servosphere
-#' output. If the dataframes should be split by stimulus, the trial record
-#' dataframe should contain a column `id_stim` that lists the id number of the
-#' trial, followed by an underscore, followed by each value of the stimulus
-#' variable retained. In this case, the rows of the trial id dataframe should be
-#' ordered by `id` in the same order as the list of dataframes first and within
-#' unique `id` values, ordered numerically by the stimulus values to be
-#' retained. This function will also append an item to your list of data frames
-#' that contains the relevant column names to be retained in future
-#' manipulations of the data.
+#' information in a column titled \code{id}. This should contain a unique
+#' identifier and any other relevant experimental information, such as
+#' treatments applied, date, time of day, etc. Make sure the rows in your trial
+#' id data frame are ordered in the same order as the list of data frames of
+#' your servosphere output.
 #'
+#' Researchers may wish to compare data before and after some stimulus has been
+#' applied and this function allows the user to split their data into separate
+#' data frames based on different values of the stimulus variable to facilitate
+#' these comparison. If the data frames should be split by stimulus, the trial
+#' record data frame should contain a column \code{id_stim} that lists the id
+#' number of the trial, followed by an underscore, followed by each value of the
+#' stimulus variable retained. If the data should be split by stimulus, the rows
+#' of the trial id data frame should be ordered first by \code{id} in the same
+#' order as their data is stored within the list. Once ordered by \code{id} the
+#' trial data data frame should be further ordered within an \code{id} by
+#' \code{stimulus} (i.e. id_stim 1_1 should come before id_stim 1_2).
+#'
+#' Data recorded during a particular stimuli may also be discarded if it is not
+#' required for analysis. For example, recordings may begin with a five minute
+#' adjustment period and the data associated with that period may not be used
+#' for analysis. The stimulus recorded by the software during that five minute
+#' adjustment period can be discarded by omitting that stimulus number from the
+#' \code{stimulus.keep} argument.
+#'
+#' This function will also append an item to your list of data frames that
+#' contains the relevant column names to be retained in future manipulations of
+#' the data.
+#'
+#' @param list The list of servosphere output data.
 #' @param trial.data The data frame containing your trial id information. This
 #'   must contain an identifier column titled `id` and if the data are to be
 #'   split by stimuli, an additional identifier column `id_stim`. See the
 #'   description for more details.
 #' @param col.names A string vector containing the names of the columns you want
-#'   to transfer to your servosphere output data.
-#' @param list The list of servosphere output data.
-#' @param stimulus.split A logical value indicating whether the dataframes
+#'   to transfer to your servosphere output data. The trial.data data frame may
+#'   have columns not needed for the analysis, so the function asks the user to
+#'   be explicit about which columns to retain.
+#' @param stimulus.split A logical value indicating whether the data frames
 #'   should be split by stimulus. Defaults to `FALSE`. If `TRUE`, be sure to
 #'   include a `id_stim` column to give each trial/stimulus combination a unique
 #'   ID.
 #' @param stimulus.keep An integer vector containing the stimuli numbers to
-#'   retain in the data and split the dataframes by. Omitted stimuli values will
-#'   be discarded.
+#'   retain in the data and split the data frames by. Omitted stimuli values
+#'   will be discarded.
+#' @return Returns the list of data frames provided which have been merged with
+#'   additional relevant trial information.
+#' @examples
+#' # Merge the columns \code{id}, \code{treatment}, and \code{date} from the
+#' # trial_record data frame with all the data frames in our list \code{dat}.
+#' dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))
+#'
+#' # Repeat of the merger above without retaining the \code{id} column while
+#' # also splitting the data provided into separate data frames based on the
+#' # different stimuli recorded, keeping only data associated with stimuli 1 and
+#' # 2. Splitting based on stimulus requires a column in the trial.data data
+#' # frame titled \code{id_stim}.
+#' dat <- mergeTrialInfo(dat_stim_split,
+#'  trial_id_split,
+#'  c("treatment", "date"),
+#'  stimulus.split = TRUE,
+#'  stimulus.keep = c(1, 2))
 #' @export
+#' @import magrittr dplyr
 
-mergeTrialInfo <- function(trial.data,
+mergeTrialInfo <- function(list,
+                           trial.data,
                            col.names,
-                           list,
                            stimulus.split = FALSE,
                            stimulus.keep) {
 
