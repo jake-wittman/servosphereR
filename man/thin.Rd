@@ -12,8 +12,8 @@ thin(list, n)
 \item{n}{The number of consecutive rows to aggregate over.}
 }
 \value{
-A list of thinned data frames with an additional column, length, to
-  check that the function worked.
+A list of thinned data frames with an additional column,
+  \code{length}, to check that the function worked.
 }
 \description{
 Thin the data frames in a list to reduce noise in movement recordings
@@ -38,5 +38,12 @@ The resulting data frames will have an additional column named "length". The
 values in length should be approximately equal to the sum of dT from the n
 rows aggregated over, i.e. if each observation from the un-thinned data is 10
 ms and the user aggregates these observations to 1 second, the value of
-length should be approximately 1.
+length should be approximately 1. Note that in thinning the data frame, the
+stimulus column will also be thinned. The stimulus status value at the first
+row to be aggregated will become the value of the stimulus for the aggregated
+row.
+}
+\examples{
+dat <- thin(dat, n = 100) # Aggregates every 100 rows in each data frame.
+dat <- thin(dat, n = 60) # Aggregates every 60 rows in each data frame.
 }

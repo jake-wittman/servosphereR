@@ -1,4 +1,4 @@
 library(testthat)
-library(servospherer)
+library(ballr)
 
-test_check("servospherer")
+test_check("ballr")

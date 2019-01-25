@@ -2,7 +2,7 @@ library(data.table)
 library(tidyverse)
 source("./R/derived_variables.R")
 source("./R/fetch_clean_functions.R")
-source("./R/servospherer.R")
+source("./R/ballr.R")
 source("./R/summarize_variables.R")
 # Test without stimulus split
 dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere.csv")
@@ -15,7 +15,7 @@ dat <- cleanNames(dat,
                            "enc1",
                            "enc2",
                            "enc3"))
-dat <- mergeTrialInfo(trial_id, c("id", "treatment", "date"), dat)
+dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"))
 dat <- thin(dat, n = 100)
 dat <- calcXY(dat)
 dat <- calcDistance(dat)
@@ -49,9 +49,9 @@ dat_stim_split <- cleanNames(dat_stim_split,
 
 trial_id_split <- read.csv("./inst/extdata/trial_id_stimulus.csv",
                            stringsAsFactors = FALSE)
-dat_stim_split <- mergeTrialInfo(trial_id_split,
+dat_stim_split <- mergeTrialInfo(dat_stim_split,
+                                 trial_id_split,
                                  c("treatment", "date"),
-                                 dat_stim_split,
                                  stimulus.split = TRUE,
                                  stimulus.keep = c(1, 2))
 dat_stim_split <- thin(dat_stim_split, n = 100)

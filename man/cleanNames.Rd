@@ -11,12 +11,19 @@ cleanNames(list, colnames)
 
 \item{colnames}{A vector of strings holding the names for the columns.}
 }
+\value{
+Returns the list of data frames provided with the column names
+  modified based on the provided vector \code{colnames}.
+}
 \description{
 Take a list of data frames and change the column names
 }
 \details{
 Once a list of data frames is generated with the getFiles function, use this
-function to set up the column names for each all the data frames in the list.
+function to set up the column names for all the data frames in the list.
+
+Other functions in this package require that the change in time and position
+columns are named "dT", "dx", and "dy", respectively.
 }
 \examples{
 colnames <- c("stimulus", "dT", "dx", "dy", "enc1", "enc2", "enc3")

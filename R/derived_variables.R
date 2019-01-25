@@ -8,14 +8,16 @@
 #'
 #' @param list A list of data frame objects with columns dx and dy.
 #' @return Converts dx and dy values to (x, y) coordinates.
+#' @examples
+#' dat <- calcXY(dat) # Calculate (x, y) coordinate pairs
 #' @export
 
 
 calcXY <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
       dplyr::mutate(.x,
-             x = cumsum(.x$dx),
-             y = cumsum(.x$dy))
+                    x = cumsum(.x$dx),
+                    y = cumsum(.x$dy))
    })
 }
 
@@ -30,6 +32,8 @@ calcXY <- function(list) {
 #' @param list A list of data frames, each of which has a column for dx and dy.
 #' @return A list of data frames, each of which has a variable for the distance
 #'   moved between each data recording.
+#' @examples
+#' dat <- calcDistance(dat)
 #' @export
 
 calcDistance <- function(list) {
@@ -45,7 +49,7 @@ calcDistance <- function(list) {
 #' This is a helper function. It is called in another function but is otherwise
 #' not "outward facing".
 #'
-#' This function to calculate the angle between a vector and the y-axis. The
+#' This function calculates the angle between a vector and the y-axis. The
 #' base function atan2 calculates the angle between a vector and the x-axis,
 #' which is not desirable in this case.
 #'
@@ -63,10 +67,10 @@ atan3 <- function(x, y) {
 #'
 #' Calculates the bearing (direction of movement) for each time step
 #'
-#' Calculate the direction moved by the organism relative to the y axis between
-#' each time step in your data frames. Requires that (x, y) coordinates have
-#' been previously calculated and each occupies its own column (e.g. one column
-#' for the x coordinate, one for the y coordinate).
+#' This function requires that the data has been previously processed with the
+#' \code{calcXY()} function, providing (x, y) coordinates. Calculate the
+#' direction moved by the organism relative to the y axis between each time step
+#' in your data frames.
 #'
 #' If the data will be thinned, it is recommended to thin the data before
 #' running this function.
@@ -75,16 +79,19 @@ atan3 <- function(x, y) {
 #'   coordinate values.
 #' @return A list of data frames with a column for the bearing of the organism
 #'   at each time step.
+#' @examples
+#' # Provide a list of data frames with two columns for the (x, y) coordinates
+#' dat <- calcBearing(dat)
 #' @export
 #' @import magrittr dplyr
 #'
 calcBearing <- function(list) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       dplyr::mutate(.x,
-             ang = atan3(
-                lead(.x$x, default = NA) - lag(.x$x, 0, default = NA),
-                lead(.x$y, default = NA) - lag(.x$y, 0, default = NA)
-             ))
+                    ang = atan3(
+                       lead(.x$x, default = NA) - lag(.x$x, 0, default = NA),
+                       lead(.x$y, default = NA) - lag(.x$y, 0, default = NA)
+                    ))
    }) %>%
       purrr::map_if(is.data.frame, function(.x) {
          mutate(.x, bearing = (.x$ang * (180 / pi)) %% 360)
@@ -99,7 +106,7 @@ calcBearing <- function(list) {
 #' Calculate the turn angle between two successive moves
 #'
 #' For this function to work, the data must have previously been processed with
-#' the calcBearing function.
+#' the \code{calcBearing} function.
 #'
 #' This function calculates the turn angle between two successive movement
 #' vectors. If the organism has not moved for a period of time but begins moving
@@ -112,7 +119,11 @@ calcBearing <- function(list) {
 #' @param list A list of data frames, where each data frame has a column for
 #'   bearing.
 #' @return A list of data frames that each contain a column for turn angle.
+#' @examples
+#' # Provide a data frame that includes a column with bearing data
+#' dat <- calcTurnAngle(dat)
 #' @export
+#' @import magrittr dplyr
 
 calcTurnAngle <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -127,7 +138,7 @@ calcTurnAngle <- function(list) {
 #' Calculate the turning velocity in degrees per second between two moves
 #'
 #' For this function to work, the data must have previously been processed with
-#' the calcTurnAngle function.
+#' the \code{calcTurnAngle} function.
 #'
 #' This function calculates the turning velocity between two consecutive moves.
 #' The units for turn velocity will be degrees per second.
@@ -138,7 +149,11 @@ calcTurnAngle <- function(list) {
 #' @param list A list of data frames, where each data frame has a column for
 #'   turn angle.
 #' @return A list of data frames that each contain a column for turn velocity.
+#' @examples
+#' # Provide data previously processed by the calcTurnAngle function
+#' dat <- calcTurnVelocity(dat)
 #' @export
+#' @import magrittr dplyr
 
 calcTurnVelocity <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -162,7 +177,10 @@ calcTurnVelocity <- function(list) {
 #' @param list A list of data frames, where each data frame has a column for dT,
 #'   dx, and dy.
 #' @return A list of data frames that each contain a column for velocity.
+#' @examples
+#' dat <- calcVelocity(dat)
 #' @export
+#' @import magrittr dplyr
 
 calcVelocity <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -176,3 +194,5 @@ calcVelocity <- function(list) {
                        ))
    })
 }
+
+
