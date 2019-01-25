@@ -11,7 +11,7 @@
 #' Blah blah blah
 #'
 #' @docType package
-#' @name servospherer
+#' @name ballr
 
 # Must have NULL for this to serve as the package help page.
 NULL
