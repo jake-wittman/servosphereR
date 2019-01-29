@@ -11,11 +11,8 @@ dat <- cleanNames(dat,
               colnames = c("stimulus",
                            "dT",
                            "dx",
-                           "dy",
-                           "enc1",
-                           "enc2",
-                           "enc3"))
-dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"))
+                           "dy"))
+dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"), stimulus.keep = c(1))
 dat <- thin(dat, n = 100)
 dat <- calcXY(dat)
 dat <- calcDistance(dat)
@@ -42,10 +39,7 @@ dat_stim_split <- cleanNames(dat_stim_split,
                              colnames = c("stimulus",
                                           "dT",
                                           "dx",
-                                          "dy",
-                                          "enc1",
-                                          "enc2",
-                                          "enc3"))
+                                          "dy"))
 
 trial_id_split <- read.csv("./inst/extdata/trial_id_stimulus.csv",
                            stringsAsFactors = FALSE)

@@ -4,8 +4,8 @@
 \alias{mergeTrialInfo}
 \title{Merge trial id information}
 \usage{
-mergeTrialInfo(list, trial.data, col.names, stimulus.split = FALSE,
-  stimulus.keep)
+mergeTrialInfo(list, trial.data, col.names, stimulus.keep,
+  stimulus.split = FALSE)
 }
 \arguments{
 \item{list}{The list of servosphere output data.}
@@ -20,14 +20,14 @@ to transfer to your servosphere output data. The trial.data data frame may
 have columns not needed for the analysis, so the function asks the user to
 be explicit about which columns to retain.}
 
+\item{stimulus.keep}{An integer vector containing the stimuli numbers to
+retained in the data and split the data frames by. Omitted stimuli values
+will be discarded.}
+
 \item{stimulus.split}{A logical value indicating whether the data frames
 should be split by stimulus. Defaults to `FALSE`. If `TRUE`, be sure to
 include a `id_stim` column to give each trial/stimulus combination a unique
 ID.}
-
-\item{stimulus.keep}{An integer vector containing the stimuli numbers to
-retain in the data and split the data frames by. Omitted stimuli values
-will be discarded.}
 }
 \value{
 Returns the list of data frames provided which have been merged with

@@ -36,6 +36,9 @@ getFiles <- function(path, pattern, full.names = TRUE) {
    fullpath <- list.files(path = path, pattern = pattern, full.names = TRUE)
    dat <- purrr::map(fullpath, data.table::fread)
    dat <- purrr::map(dat, as.data.frame)
+   dat <- purrr::map(dat, function(.x) {
+      .x %>% select(-(contains("encode")))
+   })
 }
 
 #' Set column names for list of data frames
@@ -53,7 +56,7 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #' @return Returns the list of data frames provided with the column names
 #'   modified based on the provided vector \code{colnames}.
 #' @examples
-#' colnames <- c("stimulus", "dT", "dx", "dy", "enc1", "enc2", "enc3")
+#' colnames <- c("stimulus", "dT", "dx", "dy")
 #' cleanNames(dat_list, colnames)
 #' @export
 
@@ -119,7 +122,7 @@ thin <- function(list, n){
                 length.out = nrow(x)),
             ] %>%
          bind_cols(x) %>%
-         select(-enc1, -enc2, -enc3, id, dx, dy, everything()) %>%
+         select(id, dx, dy, everything()) %>%
          select(everything())
 
       return(x)
@@ -174,7 +177,7 @@ thin <- function(list, n){
 #'   include a `id_stim` column to give each trial/stimulus combination a unique
 #'   ID.
 #' @param stimulus.keep An integer vector containing the stimuli numbers to
-#'   retain in the data and split the data frames by. Omitted stimuli values
+#'   retained in the data and split the data frames by. Omitted stimuli values
 #'   will be discarded.
 #' @return Returns the list of data frames provided which have been merged with
 #'   additional relevant trial information.
@@ -199,8 +202,8 @@ thin <- function(list, n){
 mergeTrialInfo <- function(list,
                            trial.data,
                            col.names,
-                           stimulus.split = FALSE,
-                           stimulus.keep) {
+                           stimulus.keep,
+                           stimulus.split = FALSE) {
 
    if (stimulus.split == TRUE) {
       id <- unique(trial.data$id)
@@ -228,6 +231,8 @@ mergeTrialInfo <- function(list,
       list <- map2(out, list.trial.data, function(.x, .y) {
          .y <- .y[rep(1, each = nrow(.x)), ]
          .x <- bind_cols(.x, .y)
+         .x <- .x %>%
+            select(-(num_range("id_stim", 1)))
          return(.x)
       })
       list[["col.names"]] <- c("id_stim", col.names)
@@ -241,6 +246,9 @@ mergeTrialInfo <- function(list,
       .x <- bind_cols(.x, .y)
       return(.x)
       })
+   list <- map_if(list, is.data.frame, function(.x) {
+      .x <- .x %>% filter(stimulus %in% stimulus.keep)
+   })
    list[["col.names"]] <- c("id", col.names)
    }
 

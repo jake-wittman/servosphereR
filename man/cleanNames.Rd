@@ -26,6 +26,6 @@ Other functions in this package require that the change in time and position
 columns are named "dT", "dx", and "dy", respectively.
 }
 \examples{
-colnames <- c("stimulus", "dT", "dx", "dy", "enc1", "enc2", "enc3")
+colnames <- c("stimulus", "dT", "dx", "dy")
 cleanNames(dat_list, colnames)
 }
