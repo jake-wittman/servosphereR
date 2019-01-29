@@ -22,5 +22,5 @@ distance moved between each time recording. If the data will be thinned, it
 is recommended to thin the data before running this function.
 }
 \examples{
-dat <- calcDistance(dat)
+\dontrun{dat <- calcDistance(dat)}
 }

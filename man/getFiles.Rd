@@ -40,5 +40,5 @@ noticeably slower when alternative csv reading functions are used and when
 the number of .csv files is large.
 }
 \examples{
-getFiles("./data/", pattern = "_servosphere.csv")
+\dontrun{getFiles("./data/", pattern = "_servosphere.csv")}
 }

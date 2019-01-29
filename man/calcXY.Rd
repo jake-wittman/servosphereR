@@ -21,5 +21,5 @@ y) coordinate for each position recording. If the data will be thinned, it is
 recommended to thin the data before running this function.
 }
 \examples{
-dat <- calcXY(dat) # Calculate (x, y) coordinate pairs
+\dontrun{dat <- calcXY(dat) # Calculate (x, y) coordinate pairs}
 }

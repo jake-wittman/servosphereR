@@ -16,14 +16,20 @@
 #'   numbers are ordered and named as they are in the data frames list.
 #' @examples
 #' # If a summary data frame has not been started
-#' summary_df <- summaryTotalDistance(dat, summary.df = NA)
+#' \dontrun{summary_df <- summaryTotalDistance(dat, summary.df = NA)}
 #' # If a summary data frame has been started
-#' summary_df <- summaryTotalDistance(dat, summary.df = summary_df)
+#' \dontrun{summary_df <- summaryTotalDistance(dat, summary.df = summary_df)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 summaryTotalDistance <- function(list, summary.df = NA) {
-   purrr::map_if(list, is.data.frame, function(.x) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   id_stim <- NULL
+   distance <- NULL
+
+  list <-  purrr::map_if(list, is.data.frame, function(.x) {
       total_distance <- .x %>%
          select(distance) %>%
          sum()
@@ -60,8 +66,8 @@ summaryTotalDistance <- function(list, summary.df = NA) {
 
       }
       return(out)
-   }) %>%
-      magrittr::extract(., 1:(length(.) - 1)) %>%
+   })
+      magrittr::extract(list, 1:(length(list) - 1)) %>%
       bind_rows()
 }
 
@@ -85,15 +91,20 @@ summaryTotalDistance <- function(list, summary.df = NA) {
 #'   are in the data frames list.
 #' @examples
 #' # If a summary data frame has not been started
-#' summary_df <- summaryNetDisplacement(dat, summary.df = NA)
+#' \dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = NA)}
 #' # If a summary data frame has been started
-#' summary_df <- summaryNetDisplacement(dat, summary.df = summary_df)
+#' \dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = summary_df)}
 #'
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 summaryNetDisplacement <- function(list, summary.df = NA) {
-   purrr::map_if(list, is.data.frame, function(.x) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   id_stim <- NULL
+
+  list <-  purrr::map_if(list, is.data.frame, function(.x) {
      net_displacement <- sqrt((.x$x[nrow(.x)] ^ 2) + (.x$y[nrow(.x)] ^ 2))
      if (any(names(.x) == "id_stim")) {
         out <- data.frame(id_stim = .x$id_stim[1],
@@ -128,9 +139,9 @@ summaryNetDisplacement <- function(list, summary.df = NA) {
 
      }
       return(out)
-   }) %>%
-      magrittr::extract(., 1:(length(.) - 1)) %>%
-      bind_rows()
+   })
+     magrittr::extract(list, 1:(length(list) - 1)) %>%
+     bind_rows()
 }
 
 #' Calculate tortuosity
@@ -162,11 +173,18 @@ summaryNetDisplacement <- function(list, summary.df = NA) {
 #'   they are in the data frames list.
 #' @examples
 #' # Calculate tortuosity as the ratio of net displacement to total distance
-#' summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement)
-#' # Calculate tortuosity as the ratio of total distance to net displacement (the opposite of the previous example)
-#' summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement, inverse = TRUE)
+#' \dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
+#'  total.distance = total_distance,
+#'   net.displacement = net_displacement)}
+#' # Calculate tortuosity as the ratio of total distance to net displacement
+#' # (the opposite of the previous example)
+#' \dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
+#'  total.distance = total_distance,
+#'   net.displacement = net_displacement,
+#'    inverse = TRUE)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 summaryTortuosity <- function(summary.df,
                               total.distance,
@@ -203,14 +221,19 @@ summaryTortuosity <- function(summary.df,
 #'   contains the rho, a measure of concentration for the average bearing.
 #' @examples
 #' # If a summary data frame has not been started
-#' summary_df <- summaryAvgBearing(dat, summary.df = NA)
+#' \dontrun{summary_df <- summaryAvgBearing(dat, summary.df = NA)}
 #' # If a summary data frame has been started
-#' summary_df <- summaryAvgBearing(dat, summary.df = summary_df)
+#' \dontrun{summary_df <- summaryAvgBearing(dat, summary.df = summary_df)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 
 summaryAvgBearing <- function(list, summary.df = NA) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   id_stim <- NULL
+
    out <- list %>% purrr::map_if(is.data.frame, function(.x) {
       b <- .x[!is.na(.x$bearing), "bearing"]
       # Get mean bearing by converting to radians then back to degrees
@@ -273,7 +296,7 @@ summaryAvgBearing <- function(list, summary.df = NA) {
                   slice(1)
             })
          trial_cols <- trial_cols %>%
-            magrittr::extract(-length(.)) %>%
+            magrittr::extract(-length(.data)) %>%
             bind_rows
          out <- bind_cols(out, trial_cols)
       } else {
@@ -284,7 +307,7 @@ summaryAvgBearing <- function(list, summary.df = NA) {
                   slice(1)
             })
          trial_cols <- trial_cols %>%
-            magrittr::extract(-length(.)) %>%
+            magrittr::extract(-length(.data)) %>%
             bind_rows
          out <- bind_cols(out, trial_cols)
       }
@@ -309,13 +332,18 @@ summaryAvgBearing <- function(list, summary.df = NA) {
 #'   \code{NA}
 #' @examples
 #' # If a summary data frame has not been started
-#' summary_df <- summaryAvgVelocity(dat, summary.df = NA)
+#' \dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = NA)}
 #' # If a summary data frame has been started
-#' summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)
+#' \dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 summaryAvgVelocity <- function(list, summary.df = NA) {
-   list %>% purrr::map_if(is.data.frame, function(.x) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   id_stim <- NULL
+
+   list <- list %>% purrr::map_if(is.data.frame, function(.x) {
       out <- data.frame(id = .x$id[1],
                  avg.velocity = mean(.x$velocity, na.rm = TRUE))
       if (any(names(.x) == "id_stim")) {
@@ -349,8 +377,8 @@ summaryAvgVelocity <- function(list, summary.df = NA) {
             out <- bind_cols(out, trial_cols)
          }
       }
-   }) %>%
-      magrittr::extract(., 1:(length(.) - 1)) %>%
+   })
+      magrittr::extract(list, 1:(length(list) - 1)) %>%
       bind_rows()
 
 }
@@ -371,7 +399,7 @@ summaryAvgVelocity <- function(list, summary.df = NA) {
 #' or in person observation.
 #' @param list A list of data frames, each of which must have a column recording
 #'   the velocity variable.
-#' @param summary.dat The data frame object within which you are storing path
+#' @param summary.df The data frame object within which you are storing path
 #'   summary variables. The default is NA if you do not currently have a summary
 #'   data frame object started. When set to \code{NA} the function will create a
 #'   new summary data frame. When an object is provided, the function will merge
@@ -382,14 +410,23 @@ summaryAvgVelocity <- function(list, summary.df = NA) {
 #' @examples
 #' # If a summary data frame has not been started with movement less than 0.1
 #' # cm/s qualifying as a stop
-#' summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.1)
+#' \dontrun{summary_df <- summaryStops(dat,
+#'  summary.df = NA,
+#'   stop.threshold = 0.1)}
 #' # If a summary data frame has been started with movement less than 0.05 cm/s
 #' # qualifying as a stop
-#' summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.05)
+#' \dontrun{summary_df <- summaryStops(dat,
+#'  summary.df = NA,
+#'   stop.threshold = 0.05)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 summaryStops <- function(list, summary.df = NA, stop.threshold = 0) {
-   list %>% purrr::map_if(is.data.frame, function(.x) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   id_stim <- NULL
+
+   list <- list %>% purrr::map_if(is.data.frame, function(.x) {
       stops <- ifelse(.x$velocity <= stop.threshold, 0, .x$velocity)
       stops <- rle(stops)
       num_stops <- length(stops$lengths[stops$values == 0])
@@ -430,8 +467,8 @@ summaryStops <- function(list, summary.df = NA, stop.threshold = 0) {
             out <- bind_cols(out, trial_cols)
          }
       }
-   }) %>%
-      magrittr::extract(., 1:(length(.) - 1)) %>%
+   })
+      magrittr::extract(list, 1:(length(list) - 1)) %>%
       bind_rows()
 }
 

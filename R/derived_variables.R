@@ -9,7 +9,7 @@
 #' @param list A list of data frame objects with columns dx and dy.
 #' @return Converts dx and dy values to (x, y) coordinates.
 #' @examples
-#' dat <- calcXY(dat) # Calculate (x, y) coordinate pairs
+#' \dontrun{dat <- calcXY(dat) # Calculate (x, y) coordinate pairs}
 #' @export
 
 
@@ -33,7 +33,7 @@ calcXY <- function(list) {
 #' @return A list of data frames, each of which has a variable for the distance
 #'   moved between each data recording.
 #' @examples
-#' dat <- calcDistance(dat)
+#' \dontrun{dat <- calcDistance(dat)}
 #' @export
 
 calcDistance <- function(list) {
@@ -81,10 +81,11 @@ atan3 <- function(x, y) {
 #'   at each time step.
 #' @examples
 #' # Provide a list of data frames with two columns for the (x, y) coordinates
-#' dat <- calcBearing(dat)
+#' \dontrun{dat <- calcBearing(dat)}
 #' @export
-#' @import magrittr dplyr
-#'
+#' @import dplyr
+#' @importFrom magrittr %>%
+
 calcBearing <- function(list) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       dplyr::mutate(.x,
@@ -121,9 +122,10 @@ calcBearing <- function(list) {
 #' @return A list of data frames that each contain a column for turn angle.
 #' @examples
 #' # Provide a data frame that includes a column with bearing data
-#' dat <- calcTurnAngle(dat)
+#' \dontrun{dat <- calcTurnAngle(dat)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 calcTurnAngle <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -151,9 +153,10 @@ calcTurnAngle <- function(list) {
 #' @return A list of data frames that each contain a column for turn velocity.
 #' @examples
 #' # Provide data previously processed by the calcTurnAngle function
-#' dat <- calcTurnVelocity(dat)
+#' \dontrun{dat <- calcTurnVelocity(dat)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 calcTurnVelocity <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {
@@ -169,7 +172,8 @@ calcTurnVelocity <- function(list) {
 #' between two location recordings. The units for velocity will be distance per
 #' second, where distance is the units of distance used by the software in
 #' recording the movement of the organism. For example, if the software recorded
-#' distance in centimeters, the units for velocity will be cm/s.
+#' distance in centimeters, the units for velocity will be centimeters per
+#' second.
 #'
 #' If the data will be thinned, it is recommended to thin the data before
 #' running this function.
@@ -178,9 +182,10 @@ calcTurnVelocity <- function(list) {
 #'   dx, and dy.
 #' @return A list of data frames that each contain a column for velocity.
 #' @examples
-#' dat <- calcVelocity(dat)
+#' \dontrun{dat <- calcVelocity(dat)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom magrittr %>%
 
 calcVelocity <- function(list) {
    purrr::map_if(list, is.data.frame, function(.x) {

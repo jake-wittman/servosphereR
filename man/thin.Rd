@@ -44,6 +44,8 @@ row to be aggregated will become the value of the stimulus for the aggregated
 row.
 }
 \examples{
-dat <- thin(dat, n = 100) # Aggregates every 100 rows in each data frame.
-dat <- thin(dat, n = 60) # Aggregates every 60 rows in each data frame.
+# Aggregates every 100 rows in each data frame.
+\dontrun{dat <- thin(dat, n = 100)}
+# Aggregates every 60 rows in each data frame.
+\dontrun{dat <- thin(dat, n = 60)}
 }

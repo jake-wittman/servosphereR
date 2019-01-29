@@ -30,5 +30,5 @@ running this function.
 }
 \examples{
 # Provide a data frame that includes a column with bearing data
-dat <- calcTurnAngle(dat)
+\dontrun{dat <- calcTurnAngle(dat)}
 }

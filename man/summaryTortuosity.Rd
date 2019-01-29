@@ -43,7 +43,13 @@ The quotient can be reversed by setting inverse to \code{TRUE}.
 }
 \examples{
 # Calculate tortuosity as the ratio of net displacement to total distance
-summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement)
-# Calculate tortuosity as the ratio of total distance to net displacement (the opposite of the previous example)
-summary_df <- summaryTortuosity(summary.df = summary_df, total.distance = total_distance, net.displacement = net_displacement, inverse = TRUE)
+\dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
+ total.distance = total_distance,
+  net.displacement = net_displacement)}
+# Calculate tortuosity as the ratio of total distance to net displacement
+# (the opposite of the previous example)
+\dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
+ total.distance = total_distance,
+  net.displacement = net_displacement,
+   inverse = TRUE)}
 }

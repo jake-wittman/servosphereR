@@ -27,5 +27,5 @@ If the data will be thinned, it is recommended to thin the data before
 running this function.
 }
 \examples{
-dat <- calcVelocity(dat)
+\dontrun{dat <- calcVelocity(dat)}
 }

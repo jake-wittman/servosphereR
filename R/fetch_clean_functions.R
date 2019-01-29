@@ -26,7 +26,7 @@
 #'   FALSE.
 #' @return A list where each item is a data.table
 #' @examples
-#' getFiles("./data/", pattern = "_servosphere.csv")
+#' \dontrun{getFiles("./data/", pattern = "_servosphere.csv")}
 #' @export
 
 getFiles <- function(path, pattern, full.names = TRUE) {
@@ -57,11 +57,11 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #'   modified based on the provided vector \code{colnames}.
 #' @examples
 #' colnames <- c("stimulus", "dT", "dx", "dy")
-#' cleanNames(dat_list, colnames)
+#' \dontrun{cleanNames(dat_list, colnames)}
 #' @export
 
 cleanNames <- function(list, colnames) {
-   purrr::map_if(list, is.data.frame, setNames, colnames)
+   purrr::map_if(list, is.data.frame, stats::setNames, colnames)
 }
 
 #' Thin data frames
@@ -97,12 +97,21 @@ cleanNames <- function(list, colnames) {
 #' @return A list of thinned data frames with an additional column,
 #'   \code{length}, to check that the function worked.
 #' @examples
-#' dat <- thin(dat, n = 100) # Aggregates every 100 rows in each data frame.
-#' dat <- thin(dat, n = 60) # Aggregates every 60 rows in each data frame.
+#' # Aggregates every 100 rows in each data frame.
+#' \dontrun{dat <- thin(dat, n = 100)}
+#' # Aggregates every 60 rows in each data frame.
+#' \dontrun{dat <- thin(dat, n = 60)}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr
+#' @importFrom stats aggregate
+#' @importFrom magrittr %>%
 
 thin <- function(list, n){
+   # Done to appease the R CMD check gods
+   . <- NULL
+   dx <- NULL
+   dy <- NULL
+
    purrr::map_if(list, is.data.frame, function(.x) {
       x <- cbind(aggregate(.x[, c("dT", "dx", "dy")],
                            list(rep(
@@ -119,8 +128,7 @@ thin <- function(list, n){
          select(names(.x)[!(names(.x) %in% names(x))]) %>% # rows
          .[seq(from = 1,
                 to = nrow(.x),
-                length.out = nrow(x)),
-            ] %>%
+                length.out = nrow(x)), ] %>%
          bind_cols(x) %>%
          select(id, dx, dy, everything()) %>%
          select(everything())
@@ -184,32 +192,37 @@ thin <- function(list, n){
 #' @examples
 #' # Merge the columns \code{id}, \code{treatment}, and \code{date} from the
 #' # trial_record data frame with all the data frames in our list \code{dat}.
-#' dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))
+#' \dontrun{dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))}
 #'
 #' # Repeat of the merger above without retaining the \code{id} column while
 #' # also splitting the data provided into separate data frames based on the
 #' # different stimuli recorded, keeping only data associated with stimuli 1 and
 #' # 2. Splitting based on stimulus requires a column in the trial.data data
 #' # frame titled \code{id_stim}.
-#' dat <- mergeTrialInfo(dat_stim_split,
+#' \dontrun{dat <- mergeTrialInfo(dat_stim_split,
 #'  trial_id_split,
 #'  c("treatment", "date"),
 #'  stimulus.split = TRUE,
-#'  stimulus.keep = c(1, 2))
+#'  stimulus.keep = c(1, 2))}
 #' @export
-#' @import magrittr dplyr
+#' @import dplyr purrr
+#' @importFrom rlang .data
+#' @importFrom magrittr %>%
 
 mergeTrialInfo <- function(list,
                            trial.data,
                            col.names,
                            stimulus.keep,
                            stimulus.split = FALSE) {
+   # Done to appease the R CMD check gods
+   stimulus <- NULL
+   . <- NULL
 
    if (stimulus.split == TRUE) {
       id <- unique(trial.data$id)
       list.id <- lapply(as.list(1:length(id)),
                                 function(x) x[[1]])
-      list <- map2(list, list.id, function(.x, .y) {
+      list <- purrr::map2(list, list.id, function(.x, .y) {
          .y <- rep(.y, each = nrow(.x))
          .x <- .x %>% mutate(id = .y)
          return(.x)
@@ -228,7 +241,7 @@ mergeTrialInfo <- function(list,
       trial.data <- dplyr::select(trial.data, col.names)
       list.trial.data <- lapply(as.list(1:dim(trial.data)[1]),
                                 function(x) trial.data[x[1], ])
-      list <- map2(out, list.trial.data, function(.x, .y) {
+      list <- purrr::map2(out, list.trial.data, function(.x, .y) {
          .y <- .y[rep(1, each = nrow(.x)), ]
          .x <- bind_cols(.x, .y)
          .x <- .x %>%
@@ -241,12 +254,12 @@ mergeTrialInfo <- function(list,
    trial.data <- dplyr::select(trial.data, col.names)
    list.trial.data <- lapply(as.list(1:dim(trial.data)[1]),
                                      function(x) trial.data[x[1], ])
-   list <- map2(list, list.trial.data, function(.x, .y) {
+   list <- purrr::map2(list, list.trial.data, function(.x, .y) {
       .y <- .y[rep(1, each = nrow(.x)), ]
       .x <- bind_cols(.x, .y)
       return(.x)
       })
-   list <- map_if(list, is.data.frame, function(.x) {
+   list <- purrr::map_if(list, is.data.frame, function(.x) {
       .x <- .x %>% filter(stimulus %in% stimulus.keep)
    })
    list[["col.names"]] <- c("id", col.names)

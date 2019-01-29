@@ -29,7 +29,7 @@ Determine the total distance of a path taken by an organism on a servosphere.
 }
 \examples{
 # If a summary data frame has not been started
-summary_df <- summaryTotalDistance(dat, summary.df = NA)
+\dontrun{summary_df <- summaryTotalDistance(dat, summary.df = NA)}
 # If a summary data frame has been started
-summary_df <- summaryTotalDistance(dat, summary.df = summary_df)
+\dontrun{summary_df <- summaryTotalDistance(dat, summary.df = summary_df)}
 }

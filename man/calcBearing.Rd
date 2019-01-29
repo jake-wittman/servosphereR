@@ -28,5 +28,5 @@ running this function.
 }
 \examples{
 # Provide a list of data frames with two columns for the (x, y) coordinates
-dat <- calcBearing(dat)
+\dontrun{dat <- calcBearing(dat)}
 }

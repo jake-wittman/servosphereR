@@ -28,7 +28,7 @@ equal to the distance units used to record the data per second.
 }
 \examples{
 # If a summary data frame has not been started
-summary_df <- summaryAvgVelocity(dat, summary.df = NA)
+\dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = NA)}
 # If a summary data frame has been started
-summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)
+\dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)}
 }

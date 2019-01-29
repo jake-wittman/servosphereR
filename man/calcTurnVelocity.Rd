@@ -28,5 +28,5 @@ running this function.
 }
 \examples{
 # Provide data previously processed by the calcTurnAngle function
-dat <- calcTurnVelocity(dat)
+\dontrun{dat <- calcTurnVelocity(dat)}
 }

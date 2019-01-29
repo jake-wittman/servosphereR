@@ -10,15 +10,15 @@ summaryStops(list, summary.df = NA, stop.threshold = 0)
 \item{list}{A list of data frames, each of which must have a column recording
 the velocity variable.}
 
-\item{stop.threshold}{The velocity below which the insect is considered to be
-stopped. The default is 0, but should be adjusted based on observations of
-the insect and the recording equipment.}
-
-\item{summary.dat}{The data frame object within which you are storing path
+\item{summary.df}{The data frame object within which you are storing path
 summary variables. The default is NA if you do not currently have a summary
 data frame object started. When set to \code{NA} the function will create a
 new summary data frame. When an object is provided, the function will merge
 the summary data frame with the new data.}
+
+\item{stop.threshold}{The velocity below which the insect is considered to be
+stopped. The default is 0, but should be adjusted based on observations of
+the insect and the recording equipment.}
 }
 \description{
 Caulculate how many times an insect stopped walking during its recorded
@@ -37,8 +37,12 @@ or in person observation.
 \examples{
 # If a summary data frame has not been started with movement less than 0.1
 # cm/s qualifying as a stop
-summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.1)
+\dontrun{summary_df <- summaryStops(dat,
+ summary.df = NA,
+  stop.threshold = 0.1)}
 # If a summary data frame has been started with movement less than 0.05 cm/s
 # qualifying as a stop
-summary_df <- summaryStops(dat, summary.df = NA, stop.threshold = 0.05)
+\dontrun{summary_df <- summaryStops(dat,
+ summary.df = NA,
+  stop.threshold = 0.05)}
 }

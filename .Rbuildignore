@@ -1,3 +1,5 @@
+^desktop\.ini$
+^testingfunctions$
 ^data-raw$
 ^.*\.Rproj$
 ^\.Rproj\.user$

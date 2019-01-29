@@ -70,16 +70,16 @@ the data.
 \examples{
 # Merge the columns \\code{id}, \\code{treatment}, and \\code{date} from the
 # trial_record data frame with all the data frames in our list \\code{dat}.
-dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))
+\dontrun{dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))}
 
 # Repeat of the merger above without retaining the \\code{id} column while
 # also splitting the data provided into separate data frames based on the
 # different stimuli recorded, keeping only data associated with stimuli 1 and
 # 2. Splitting based on stimulus requires a column in the trial.data data
 # frame titled \\code{id_stim}.
-dat <- mergeTrialInfo(dat_stim_split,
+\dontrun{dat <- mergeTrialInfo(dat_stim_split,
  trial_id_split,
  c("treatment", "date"),
  stimulus.split = TRUE,
- stimulus.keep = c(1, 2))
+ stimulus.keep = c(1, 2))}
 }
