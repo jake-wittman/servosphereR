@@ -1,3 +1,5 @@
+^README\.Rmd$
+^cran-comments\.md$
 ^Meta$
 ^doc$
 ^\.travis\.yml$

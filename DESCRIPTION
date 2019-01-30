@@ -1,14 +1,14 @@
-Package: ballr
+Package: servosphereR
 Type: Package
-Title: Analyze Data generated from Syntech Servosphere Trials
+Title: Analyze Data Generated from Syntech Servosphere Trials
 Version: 0.1.0
 Authors@R: person("Jacob T.", "Wittman", email = "wittja01@gmail.com", role = c("aut", "cre"))
-Description: This package provides functions to facilitate and speed up the analysis of data produced by a servosphere. This package is also designed to make working with data produced from a servosphere easy for someone new to or unfamiliar with R. 
+Description: Functions that facilitate and speed up the analysis of data produced by a servosphere. This package is also designed to make working with data produced from a servosphere easy for someone new to or unfamiliar with R. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: http://github.com/wittja01/ballr
-BugReports: http://github.com/wittja01/ballr/issues
+URL: http://github.com/wittja01/servosphereR
+BugReports: http://github.com/wittja01/servosphereR/issues
 RoxygenNote: 6.1.0
 Imports:
    purrr (>= 0.2),

@@ -1,5 +1,5 @@
 ---
-title: "ballr: A Package for Analyzing SynTech Servosphere Data"
+title: "servosphereR: A Package for Analyzing SynTech Servosphere Data"
 author: 
  - name: "Jacob T. Wittman"
    affiliation: "Department of Entomology, University of Minnesota"
@@ -7,14 +7,14 @@ author:
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ballr: A Package for Analyzing SynTech Servosphere Data}
+  %\VignetteIndexEntry{servosphereR: A Package for Analyzing SynTech Servosphere Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 ```{r, include = FALSE}
 library(data.table)
 library(magrittr)
-library(ballr)
+library(servosphereR)
 ```
 
 ## Introduction
@@ -77,9 +77,9 @@ introduced. The researcher could use the stimulus function to identify the time
 period during which there was no pheromone and the time period during which
 there was pheromone present, facilitating later analyses.
 
-## Using ballr to work with servosphere data
+## Using servosphereR to work with servosphere data
 
-The functions in the ballr package can be divided into three use categories:
+The functions in the servosphereR package can be divided into three use categories:
 loading in and cleaning the data, deriving other movement variables of interest
 from the raw data, and summarizing the derived variables for the purpose of
 analysis. Generally speaking, the functions should also be used in the same
@@ -358,7 +358,7 @@ summary_data_frame <- summaryAvgVelocity(list = servosphere_data,
 
 ## Comments, Requests, Suggestions, Etc.
 
-I will happily respond to any requests or suggestions to improve this package or implement additional functionality. I can be reached at wittja01 [at] gmail dot com or on Twitter @wittja01. This package is also available on GitHub at [github.com/wittja01/ballr](http://github.com/wittja01/ballr), so consider making pull requests or leaving comments there.
+I will happily respond to any requests or suggestions to improve this package or implement additional functionality. I can be reached at wittja01 [at] gmail dot com or on Twitter @wittja01. This package is also available on GitHub at [github.com/wittja01/servosphereR](http://github.com/wittja01/servosphereR), so consider making pull requests or leaving comments there.
 
 
 ## Citations

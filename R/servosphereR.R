@@ -1,4 +1,4 @@
-#' ballr: A package to facilitate cleaning and analyzing data produced by a servosphere.
+#' servosphereR: A package to facilitate cleaning and analyzing data produced by a servosphere.
 #'
 #' A servosphere, or locomotory compensator, is a device that can be used to
 #' study the movement of insects or other small critters. A servosphere consists
@@ -11,7 +11,7 @@
 #' Blah blah blah
 #'
 #' @docType package
-#' @name ballr
+#' @name servosphereR
 
 # Must have NULL for this to serve as the package help page.
 NULL
