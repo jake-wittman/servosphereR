@@ -21,7 +21,8 @@ This function calculates the velocity of the organism on the servosphere
 between two location recordings. The units for velocity will be distance per
 second, where distance is the units of distance used by the software in
 recording the movement of the organism. For example, if the software recorded
-distance in centimeters, the units for velocity will be cm/s.
+distance in centimeters, the units for velocity will be centimeters per
+second.
 
 If the data will be thinned, it is recommended to thin the data before
 running this function.

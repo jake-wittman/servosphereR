@@ -61,7 +61,11 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #' @export
 
 cleanNames <- function(list, colnames) {
-   purrr::map_if(list, is.data.frame, stats::setNames, colnames)
+   purrr::map_if(list, is.data.frame, function(.x) {
+     .x <- .x %>%
+         select(-(contains("enco")))
+     .x <- stats::setNames(.x, colnames)
+   })
 }
 
 #' Thin data frames
