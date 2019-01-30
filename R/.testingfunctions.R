@@ -2,7 +2,7 @@ library(data.table)
 library(tidyverse)
 source("./R/derived_variables.R")
 source("./R/fetch_clean_functions.R")
-source("./R/ballr.R")
+source("./R/servosphereR.R")
 source("./R/summarize_variables.R")
 # Test without stimulus split
 dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere.csv")

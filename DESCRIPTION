@@ -1,4 +1,4 @@
-Package: ballr
+Package: servosphereR
 Type: Package
 Title: Analyze Data generated from Syntech Servosphere Trials
 Version: 0.1.0
@@ -7,8 +7,8 @@ Description: This package provides functions to facilitate and speed up the anal
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: http://github.com/wittja01/ballr
-BugReports: http://github.com/wittja01/ballr/issues
+URL: http://github.com/wittja01/servosphereR
+BugReports: http://github.com/wittja01/servosphereR/issues
 RoxygenNote: 6.1.0
 Imports:
    purrr (>= 0.2),
