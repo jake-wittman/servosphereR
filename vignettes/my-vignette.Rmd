@@ -6,7 +6,7 @@ author:
    email: wittja01@gmail.com
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-bibliography: /Users/wittm094/Documents/library.bib
+bibliography: /Users/wittm094/Google Drive/school_work/grad_school/MS Project/ballr/vignettes/library.bib
 vignette: >
   %\VignetteIndexEntry{ballr: A Package for Analyzing SynTech Servosphere Data}
   %\VignetteEngine{knitr::rmarkdown}
