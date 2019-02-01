@@ -16,7 +16,7 @@ Imports:
    dplyr (>= 0.7),
    magrittr (>= 1.5),
    rlang (>= 0.3),
-   stats (>= 3.5)
+   stats (>= 3.4)
 Suggests: 
     knitr,
     rmarkdown,
