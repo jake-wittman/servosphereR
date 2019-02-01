@@ -3,10 +3,10 @@ title: "servosphereR: A Package for Analyzing SynTech Servosphere Data"
 author: 
  - name: "Jacob T. Wittman (corresponding author)"
    affiliation: 
-   - &id "Department of Entomology, University of Minnesota"
+   - "Department of Entomology, University of Minnesota"
    email: wittja01@gmail.com
  - name: "Brian H. Aukema"
-   affiliation: *id
+   affiliation: "Department of Entomology, University of Minnesota"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -24,15 +24,15 @@ library(servosphereR)
 
 A servosphere, or locomotory compensator, is a device that can be used to study the movement of insects or other small flightless animals. A servosphere is a sphere, on top of which an insect is placed. A camera is mounted directly over the top of the sphere with a downward viewing angle.  The camera watches the insect as it moves and reports position changes to three motors positioned as a tripod at the base of the ball. As the insect moves, the camera relays information in real time to the motors, which coordinate rotation to keep the insect positioned at the top of the sphere. Locomotory compensators have been used in a number of studies of insect movement in response to different stimuli (Arnold, Stevenson, and Belmain 2016; Becher and Guerin 2009; Bell and Kramer 1980; Noldus, Spink, and Tegelenbosch 2002; Otálora-Luna and Dickens 2011a; Otálora-Luna and Dickens 2011b; Otálora-Luna, Lapointe, and Dickens 2013; Party et al. 2013; Sakuma 2002).
 
-[product
-website](http://www.ockenfels-syntech.com/products/locomotion-compensation/).
+This package is written to aid analysis of data produced by a SynTech Servosphere [product
+website](http://www.ockenfels-syntech.com/products/locomotion-compensation/). Data are output in a standardized raw x.csv form.  The software provided to date by Syntech that is shipped with the servosphere can be used for some analyses.  Other, more complicated analyses, however, require working directly with the raw x.csv files produced during instrument recording.
 
-This package is the result of analyzing servosphere data in R for the Master’s thesis of Jacob T. Wittman in the Forest Insect Science laboratory in the Department of Entomology at the University of Minnesota, St. Paul, MN, USA. This short vignette describes the .csv output available from the servosphere software and provide examples of potential work flows for these data.
+This package is the result of analyzing servosphere data in R for the Master’s thesis of Jacob T. Wittman in the Forest Insect Science laboratory in the Department of Entomology at the University of Minnesota, St. Paul, MN, USA. This short vignette describes the x.csv output available from the servosphere software and provide examples of potential work flows for these data.
 
 ## Raw Servosphere Data
 
 After each trial recorded by the servosphere, the user can (and should) save the
-recorded .csv file. The first few rows of one of these .csv files will look like
+recorded x.csv file. The first few rows of one of these x.csv files will look like
 this when first imported into R.
 
 ```{r, include = FALSE, echo = FALSE}
@@ -43,7 +43,7 @@ servosphere_data <- read.csv2("317_03212018_servosphere.csv")
 head(servosphere_data, n = 4)
 ```
 
-As you can see, the column names are a bit of a mess but they do provide useful information about what is recorded in these files. Each row in this .csv is a record of where the insect has moved in the time elapsed since the last cycle of communication between the servosphere and the computer was completed. The time between communication cycles in recorded in the dT column and is in milliseconds. The data in the dX and dY columns record how far in the x and y directions the insect moved during the time period measured in the dT column. The encoder pulse columns are not vital to analysing the data and pertain to software reconstruction of the direction and distance moved between communication cycles.
+As you can see, the column names are a bit of a mess but they do provide useful information about what is recorded in these files. Each row in this x.csv is a record of where the insect has moved in the time elapsed since the last cycle of communication between the servosphere and the computer was completed. The time between communication cycles in recorded in the dT column and is in milliseconds. The data in the dX and dY columns record how far in the x and y directions the insect moved during the time period measured in the dT column. The encoder pulse columns are not vital to analysing the data and pertain to software reconstruction of the direction and distance moved between communication cycles.
 
 The cState records which “stimulus” has been activated according to the software during the period of recording. The stimulus function available in the locomotion compensator software allows the user to record the time when a stimulus has been administered to the study organism. For example, a researcher may wish to measure the locomotory response of an insect to different concentrations of a sex pheromone. A single trial for this experiment could consist of allowing the insect to move about on top of the sphere for several minutes in the absence of the pheromone and then administering the pheromone for the same amount of time and recording the movement after the pheromone has been introduced. The researcher could use the stimulus function to identify the time period during which there was no pheromone and the time period during which there was pheromone present, facilitating later analyses.
 
@@ -65,7 +65,7 @@ If you are comfortable working in R and learning how to use new functions, you m
 
 ### Loading and cleaning data
 
-Each trial recorded on the servosphere produces one .csv file. A single experiment may produce tens or hundreds of such .csv files, which can be difficult to manage in R. The `getFiles()` function makes it easy to import these raw data files into R so the researcher can begin working with them. To use `getFiles()` , all of the raw, unedited .csv files should be stored in a single folder, which is provided to the function in the path argument. Additionally, each file should contain some string of characters that distinguishes them from any other .csv files that may be in the data folder. For example, one possible naming scheme would be “01_28052018_servosphere.csv”. The first number “01” is a unique identifier for the file, the following number is the date in DMY format and the last part, “_servosphere" serves as a pattern identifier that `getFiles()` will use to select only csv files with “_servosphere" in the title. This function will also drop the encoder columns from each data set, as they are not necessary for analyzing or working with the data. The following code chunk demonstrates how to use the `getFiles()` function.
+Each trial recorded on the servosphere produces one x.csv file. A single experiment may produce tens or hundreds of such x.csv files, which can be difficult to manage in R. The `getFiles()` function makes it easy to import these raw data files into R so the researcher can begin working with them. To use `getFiles()` , all of the raw, unedited x.csv files should be stored in a single folder, which is provided to the function in the path argument. Additionally, each file should contain some string of characters that distinguishes them from any other x.csv files that may be in the data folder. For example, one possible naming scheme would be “01_28052018_servosphere.csv”. The first number “01” is a unique identifier for the file, the following number is the date in DMY format and the last part, “_servosphere" serves as a pattern identifier that `getFiles()` will use to select only csv files with “_servosphere" in the title. This function will also drop the encoder columns from each data set, as they are not necessary for analyzing or working with the data. The following code chunk demonstrates how to use the `getFiles()` function.
 
 ```{r, include = FALSE}
 servosphere_data <- getFiles(path = ".", pattern = "_servosphere")
@@ -76,7 +76,7 @@ servosphere_data <- getFiles(path = "C:/Users/Jake/thesis_project/servosphere_da
                              pattern = "_servosphere")
 ```
 
-The created object `servosphere_data` is a list.  Each item in the list is one raw .csv file from the “servosphere_data” folder that has a title that matches the pattern “_servosphere" somewhere. It is important that the pattern provided is only used in the .csv data files, otherwise R will try to read in any file containing that pattern and this function and subsequent functions will produce errors.
+The created object `servosphere_data` is a list.  Each item in the list is one raw x.csv file from the “servosphere_data” folder that has a title that matches the pattern “_servosphere" somewhere. It is important that the pattern provided is only used in the x.csv data files, otherwise R will try to read in any file containing that pattern and this function and subsequent functions will produce errors.
 
 Now that the data are loaded into R, cleaning can begin. The first step should be to clean up the messy column names shown earlier. This can be done with the `cleanNames()` function. This function takes two arguments. The first argument provides the function with the list object in which the data are stored. The second argument should be a character vector containing the cleaned names designated for all the columns. Specifically, the “dT”, “dx”, “and”dy" columns should all be named as such. Other functions will look for columns with those names and if they are not found, the functions will not work. Additionally, every column in the data frame must have an associated character string to be used as name. The names in the following example can be used for simplicity.
 
@@ -91,7 +91,7 @@ head(servosphere_data[[1]], n = 4) # Return the first 4 rows of the 1st file in 
 
 After applying the `cleanNames()` function,  the data contained in our list will have their heading names renamed, facilitating the use of other functions.
 
-The next step in the work flow is to merge any additional experimental information that may be pertinent for future analysis with the raw data. For example, one may wish to determine how different types of food affect the movement behavior of the study organism. This is accomplished by maintaining a separate .csv file containing data linking each trial with a unique ID and any relevant experimental information. There should be one row for each unique trial.  These rows should be ordered in the same order as the data frames in the list of data frames generated by `getFiles()`. Here is a simple example of a file containing additional experimental information:
+The next step in the work flow is to merge any additional experimental information that may be pertinent for future analysis with the raw data. For example, one may wish to determine how different types of food affect the movement behavior of the study organism. This is accomplished by maintaining a separate x.csv file containing data linking each trial with a unique ID and any relevant experimental information. There should be one row for each unique trial.  These rows should be ordered in the same order as the data frames in the list of data frames generated by `getFiles()`. Here is a simple example of a file containing additional experimental information:
 
 ```{r, echo = FALSE, eval = TRUE}
 experiment_info <- read.csv("trial_id.csv")
@@ -129,7 +129,7 @@ servosphere_data <- mergeTrialInfo(list = servosphere_data,
 head(servosphere_data[[1]], n = 4)
 ```
 
-Lastly, some experimental designs may be interested in comparing behavior before and after a certain stimulus is administered. This function can be used to split your data by stimulus into multiple separate data frames to facilitate this analysis. If this effect is desired, the user must include an additional column in the experimental information .csv titled “id_stim” that combines the unique ID value for each trial with each stimulus used during said trial. For example, in one experiment, stimulus 1 may be used to denote the start of the trial before a pheromone is administered and stimulus 2 is used to signify the time period during which the pheromone is present. Two rows would needed in the experimental information .csv per unique trial. Such a .csv file might look like this:
+Lastly, some experimental designs may be interested in comparing behavior before and after a certain stimulus is administered. This function can be used to split your data by stimulus into multiple separate data frames to facilitate this analysis. If this effect is desired, the user must include an additional column in the experimental information x.csv titled “id_stim” that combines the unique ID value for each trial with each stimulus used during said trial. For example, in one experiment, stimulus 1 may be used to denote the start of the trial before a pheromone is administered and stimulus 2 is used to signify the time period during which the pheromone is present. Two rows would needed in the experimental information x.csv per unique trial. Such a x.csv file might look like this:
 
 ```{r, echo = FALSE, eval = TRUE}
 experimental_info_stim_split <- read.csv("trial_id_stimulus.csv") %>% 
