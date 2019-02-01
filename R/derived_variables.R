@@ -3,8 +3,8 @@
 #' Calculates (x,y) coordinates from dx and dy values
 #'
 #' Use the dx and dy columns in the servosphere data frames to calculate the (x,
-#' y) coordinate for each position recording. If the data will be thinned, it is
-#' recommended to thin the data before running this function.
+#' y) coordinate for each position recording. If the data will be aggregated, it is
+#' recommended to aggregate the data before running this function.
 #'
 #' @param list A list of data frame objects with columns dx and dy.
 #' @return Converts dx and dy values to (x, y) coordinates.
@@ -26,8 +26,8 @@ calcXY <- function(list) {
 #' Calculate distance moved between time steps
 #'
 #' Use the dx and dy columns in the servosphere data frames to calculate the
-#' distance moved between each time recording. If the data will be thinned, it
-#' is recommended to thin the data before running this function.
+#' distance moved between each time recording. If the data will be aggregated, it
+#' is recommended to aggregate the data before running this function.
 #'
 #' @param list A list of data frames, each of which has a column for dx and dy.
 #' @return A list of data frames, each of which has a variable for the distance
@@ -53,7 +53,7 @@ calcDistance <- function(list) {
 #' base function atan2 calculates the angle between a vector and the x-axis,
 #' which is not desirable in this case.
 #'
-#' If the data will be thinned, it is recommended to thin the data before
+#' If the data will be aggregated, it is recommended to aggregate the data before
 #' running this function.
 #'
 #' @param x The x coordinate from the (x, y) locations.
@@ -72,7 +72,7 @@ atan3 <- function(x, y) {
 #' direction moved by the organism relative to the y axis between each time step
 #' in your data frames.
 #'
-#' If the data will be thinned, it is recommended to thin the data before
+#' If the data will be aggregated, it is recommended to aggregate the data before
 #' running this function.
 #'
 #' @param list A list of data frames with separate columns for x and y
@@ -114,7 +114,7 @@ calcBearing <- function(list) {
 #' again, the function calculates the turn angle between the last movement the
 #' organism made and its current move.
 #'
-#' If the data will be thinned, it is recommended to thin the data before
+#' If the data will be aggregated, it is recommended to aggregate the data before
 #' running this function.
 #'
 #' @param list A list of data frames, where each data frame has a column for
@@ -145,7 +145,7 @@ calcTurnAngle <- function(list) {
 #' This function calculates the turning velocity between two consecutive moves.
 #' The units for turn velocity will be degrees per second.
 #'
-#' If the data will be thinned, it is recommended to thin the data before
+#' If the data will be aggregated, it is recommended to aggregate the data before
 #' running this function.
 #'
 #' @param list A list of data frames, where each data frame has a column for
@@ -175,7 +175,7 @@ calcTurnVelocity <- function(list) {
 #' distance in centimeters, the units for velocity will be centimeters per
 #' second.
 #'
-#' If the data will be thinned, it is recommended to thin the data before
+#' If the data will be aggregated, it is recommended to aggregate the data before
 #' running this function.
 #'
 #' @param list A list of data frames, where each data frame has a column for dT,

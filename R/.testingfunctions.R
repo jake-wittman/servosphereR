@@ -13,7 +13,7 @@ dat <- cleanNames(dat,
                            "dx",
                            "dy"))
 dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"), stimulus.keep = c(1))
-dat <- thin(dat, n = 100)
+dat <- aggregateData(dat, n = 100)
 dat <- calcXY(dat)
 dat <- calcDistance(dat)
 dat <- calcBearing(dat)
@@ -48,7 +48,7 @@ dat_stim_split <- mergeTrialInfo(dat_stim_split,
                                  c("treatment", "date"),
                                  stimulus.split = TRUE,
                                  stimulus.keep = c(1, 2))
-dat_stim_split <- thin(dat_stim_split, n = 100)
+dat_stim_split <- aggregateData(dat_stim_split, n = 100)
 dat_stim_split <- calcXY(dat_stim_split)
 dat_stim_split <- calcDistance(dat_stim_split)
 dat_stim_split <- calcBearing(dat_stim_split)

@@ -1,5 +1,5 @@
 ## Test environments
-* win-builder ()
+* win-builder (devel and release)
 * ubuntu 14.04 (on travis-ci), R 3.5.2
 
 # R CMD check results

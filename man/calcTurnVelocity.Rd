@@ -23,7 +23,7 @@ the \code{calcTurnAngle} function.
 This function calculates the turning velocity between two consecutive moves.
 The units for turn velocity will be degrees per second.
 
-If the data will be thinned, it is recommended to thin the data before
+If the data will be aggregated, it is recommended to aggregate the data before
 running this function.
 }
 \examples{
