@@ -2,9 +2,7 @@ Package: servosphereR
 Type: Package
 Title: Analyze Data Generated from Syntech Servosphere Trials
 Version: 0.1.0
-Authors@R: c(
-   person("Jacob T.", "Wittman", email = "wittja01@gmail.com", role = c("aut", "cre")),
-   person("Brian H.", "Aukema", role = "ctb"))
+Authors@R: c(person("Jacob T.", "Wittman", email = "wittja01@gmail.com", role = c("aut", "cre")), person("Brian H.", "Aukema", role = "ctb"))
 Description: Functions that facilitate and speed up the analysis of data produced by a servosphere. This package is also designed to make working with data produced from a servosphere easy for someone new to or unfamiliar with R. 
 License: GPL-3
 Encoding: UTF-8
