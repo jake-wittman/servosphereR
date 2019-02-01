@@ -1,12 +1,10 @@
 ---
 title: "servosphereR: A Package for Analyzing SynTech Servosphere Data"
 author: 
- - name: "Jacob T. Wittman (corresponding author)"
-   affiliation: 
-   - "Department of Entomology, University of Minnesota"
-   email: wittja01@gmail.com
- - name: "Brian H. Aukema"
+ - name: "Jacob T. Wittman (corresponding author), Brian H. Aukema"
    affiliation: "Department of Entomology, University of Minnesota"
+   email: wittja01@gmail.com
+
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
