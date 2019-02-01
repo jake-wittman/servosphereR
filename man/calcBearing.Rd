@@ -23,7 +23,7 @@ This function requires that the data has been previously processed with the
 direction moved by the organism relative to the y axis between each time step
 in your data frames.
 
-If the data will be thinned, it is recommended to thin the data before
+If the data will be aggregated, it is recommended to aggregate the data before
 running this function.
 }
 \examples{

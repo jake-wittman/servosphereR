@@ -24,7 +24,7 @@ recording the movement of the organism. For example, if the software recorded
 distance in centimeters, the units for velocity will be centimeters per
 second.
 
-If the data will be thinned, it is recommended to thin the data before
+If the data will be aggregated, it is recommended to aggregate the data before
 running this function.
 }
 \examples{

@@ -25,7 +25,7 @@ vectors. If the organism has not moved for a period of time but begins moving
 again, the function calculates the turn angle between the last movement the
 organism made and its current move.
 
-If the data will be thinned, it is recommended to thin the data before
+If the data will be aggregated, it is recommended to aggregate the data before
 running this function.
 }
 \examples{

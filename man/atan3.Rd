@@ -22,6 +22,6 @@ This function calculates the angle between a vector and the y-axis. The
 base function atan2 calculates the angle between a vector and the x-axis,
 which is not desirable in this case.
 
-If the data will be thinned, it is recommended to thin the data before
+If the data will be aggregated, it is recommended to aggregate the data before
 running this function.
 }

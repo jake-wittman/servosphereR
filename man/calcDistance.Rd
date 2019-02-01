@@ -18,8 +18,8 @@ Calculate distance moved between time steps
 }
 \details{
 Use the dx and dy columns in the servosphere data frames to calculate the
-distance moved between each time recording. If the data will be thinned, it
-is recommended to thin the data before running this function.
+distance moved between each time recording. If the data will be aggregated, it
+is recommended to aggregate the data before running this function.
 }
 \examples{
 \dontrun{dat <- calcDistance(dat)}
