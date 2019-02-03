@@ -327,20 +327,20 @@ This first author will happily respond to any requests or suggestions to improve
 
 ## Citations
 
-Arnold, Sarah E.J., Philip C. Stevenson, and Steven R. Belmain. 2016. “Shades of yellow: interactive effects of visual and odour cues in a pest beetle.” PeerJ 4 (July). PeerJ Inc.: e2219. doi:10.7717/peerj.2219.
+Arnold, Sarah E.J., Philip C. Stevenson, and Steven R. Belmain. 2016. “Shades of yellow: interactive effects of visual and odour cues in a pest beetle.” PeerJ 4 (July). PeerJ Inc.: e2219.
 
-Becher, Paul G, and Patrick M Guerin. 2009. “Oriented responses of grapevine moth larvae Lobesia botrana to volatiles from host plants and an artificial diet on a locomotion compensator.” Journal of Insect Physiology 55 (4): 384–93. doi:10.1016/j.jinsphys.2009.01.006.
+Becher, Paul G, and Patrick M Guerin. 2009. “Oriented responses of grapevine moth larvae Lobesia botrana to volatiles from host plants and an artificial diet on a locomotion compensator.” Journal of Insect Physiology 55 (4): 384–93. 
 
-Bell, William J., and Ernest Kramer. 1980. “Sex pheromone-stimulated orientation of the American cockroach on a servosphere apparatus.” Journal of Chemical Ecology 6 (2). Kluwer Academic Publishers-Plenum Publishers: 287–95. doi:10.1007/BF01402908.
+Bell, William J., and Ernest Kramer. 1980. “Sex pheromone-stimulated orientation of the American cockroach on a servosphere apparatus.” Journal of Chemical Ecology 6 (2). Kluwer Academic Publishers-Plenum Publishers: 287–95. 
 
-Noldus, Lucas P J J, Andrew J Spink, and Ruud A J Tegelenbosch. 2002. “Computerised video tracking, movement analysis and behaviour recognition in insects.” Computers and Electronics in Agriculture 35 (2-3): 201–27. doi:10.1016/S0168-1699(02)00019-4.
+Noldus, Lucas P J J, Andrew J Spink, and Ruud A J Tegelenbosch. 2002. “Computerised video tracking, movement analysis and behaviour recognition in insects.” Computers and Electronics in Agriculture 35 (2-3): 201–27. 
 
-Otálora-Luna, Fernando, and Joseph C. Dickens. 2011a. “Spectral preference and temporal modulation of photic orientation by Colorado potato beetle on a servosphere.” Entomologia Experimentalis et Applicata 138 (2): 93–103. doi:10.1111/j.1570-7458.2010.01081.x.
+Otálora-Luna, Fernando, and Joseph C. Dickens. 2011a. “Spectral preference and temporal modulation of photic orientation by Colorado potato beetle on a servosphere.” Entomologia Experimentalis et Applicata 138 (2): 93–103. 
 
-———. 2011b. “Multimodal stimulation of colorado potato beetle reveals modulation of pheromone response by yellow light.” Edited by Guy Smagghe. PLoS ONE 6 (6): e20990. doi:10.1371/journal.pone.0020990.
+———. 2011b. “Multimodal stimulation of colorado potato beetle reveals modulation of pheromone response by yellow light.” Edited by Guy Smagghe. PLoS ONE 6 (6): e20990. 
 
-Otálora-Luna, Fernando, Stephen L. Lapointe, and Joseph C. Dickens. 2013. “Olfactory Cues Are Subordinate to Visual Stimuli in a Neotropical Generalist Weevil.” Edited by Frederic Marion-Poll. PLoS ONE 8 (1). Public Library of Science: e53120. doi:10.1371/journal.pone.0053120.
+Otálora-Luna, Fernando, Stephen L. Lapointe, and Joseph C. Dickens. 2013. “Olfactory Cues Are Subordinate to Visual Stimuli in a Neotropical Generalist Weevil.” Edited by Frederic Marion-Poll. PLoS ONE 8 (1). Public Library of Science: e53120.
 
-Party, Virginie, Christophe Hanot, Daniela Schmidt Busser, Didier Rochat, and Michel Renou. 2013. “Changes in odor background affect the locomotory response to pheromone in moths.” Edited by John I. Glendinning. PLoS ONE 8 (1). Public Library of Science: e52897. doi:10.1371/journal.pone.0052897.
+Party, Virginie, Christophe Hanot, Daniela Schmidt Busser, Didier Rochat, and Michel Renou. 2013. “Changes in odor background affect the locomotory response to pheromone in moths.” Edited by John I. Glendinning. PLoS ONE 8 (1). Public Library of Science: e52897. 
 
-Sakuma, Masayuki. 2002. “Virtual reality experiments on a digital servosphere: guiding male silkworm moths to a virtual odour source.” Computers and Electronics in Agriculture 35 (2): 243–54. doi:10.1016/S0168-1699(02)00021-2.
+Sakuma, Masayuki. 2002. “Virtual reality experiments on a digital servosphere: guiding male silkworm moths to a virtual odour source.” Computers and Electronics in Agriculture 35 (2): 243–54. 

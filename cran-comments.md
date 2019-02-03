@@ -1,3 +1,6 @@
+## Resubmission
+This is a resubmission. In this version I have removed the DOIs from my vignette that appeared to have caused the note about invalid URLs.
+
 ## Test environments
 * win-builder (devel and release)
 * ubuntu 14.04 (on travis-ci), R 3.5.2
