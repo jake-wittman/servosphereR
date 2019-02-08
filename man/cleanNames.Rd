@@ -27,5 +27,5 @@ columns are named "dT", "dx", and "dy", respectively.
 }
 \examples{
 colnames <- c("stimulus", "dT", "dx", "dy")
-\dontrun{cleanNames(dat_list, colnames)}
+servosphere <- cleanNames(servosphere, colnames)
 }

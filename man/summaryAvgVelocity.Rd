@@ -7,7 +7,7 @@
 summaryAvgVelocity(list, summary.df = NA)
 }
 \arguments{
-\item{list}{A list of data frames, each of which has a column for bearing.}
+\item{list}{A list of data frames, each of which has a column for velocity.}
 
 \item{summary.df}{The data frame object within which you are storing path
   summary variables. The default is NA if you do not currently have a summary
@@ -28,7 +28,30 @@ equal to the distance units used to record the data per second.
 }
 \examples{
 # If a summary data frame has not been started
-\dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = NA)}
+\dontshow{
+ servosphere <- list(data.frame(id = rep(1, 200),
+                                stimulus = rep(c(0, 1), each = 100),
+                                dT = sample(8:12, 200, replace = TRUE),
+                                dx = runif(200, 0, 5),
+                                dy = runif(200, 0, 5),
+                                treatment = rep("a", 200),
+                                date = rep("2032018", 200)),
+                     data.frame(id = rep(2, 200),
+                                stimulus = rep(c(0, 1), each = 100),
+                                dT = sample(8:12, 200, replace = TRUE),
+                                dx = runif(200, 0, 5),
+                                dy = runif(200, 0, 5),
+                                treatment = rep("b", 200),
+                                date = rep("2032018", 200)))
+servosphere <- calcVelocity(servosphere)
+}
+summary_df <- summaryAvgVelocity(servosphere, summary.df = NA)
 # If a summary data frame has been started
-\dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)}
+\dontshow{
+summary_df <- data.frame(id = c(1, 2),
+                         treatment = c("a", "b"),
+                         date = c("2032018", "2042018"),
+                         stimulus = c(0, 0))
+}
+summary_df <- summaryAvgVelocity(servosphere, summary.df = summary_df)
 }

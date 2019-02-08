@@ -7,8 +7,6 @@
 #' motors. As the insect moves, the motors rotate to keep the insect positioned
 #' at the top of the sphere.
 #'
-#' @section Some_section_title:
-#' Blah blah blah
 #'
 #' @docType package
 #' @name servosphereR

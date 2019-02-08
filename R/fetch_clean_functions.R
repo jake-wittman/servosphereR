@@ -26,7 +26,7 @@
 #'   FALSE.
 #' @return A list where each item is a data.table
 #' @examples
-#' \dontrun{getFiles("./data/", pattern = "_servosphere.csv")}
+#' servosphere <- getFiles("./extdata/", pattern = "_servosphere.csv")
 #' @export
 
 getFiles <- function(path, pattern, full.names = TRUE) {
@@ -57,7 +57,7 @@ getFiles <- function(path, pattern, full.names = TRUE) {
 #'   modified based on the provided vector \code{colnames}.
 #' @examples
 #' colnames <- c("stimulus", "dT", "dx", "dy")
-#' \dontrun{cleanNames(dat_list, colnames)}
+#' servosphere <- cleanNames(servosphere, colnames)
 #' @export
 
 cleanNames <- function(list, colnames) {
@@ -101,10 +101,25 @@ cleanNames <- function(list, colnames) {
 #' @return A list of aggregated data frames with an additional column,
 #'   \code{length}, to check that the function worked.
 #' @examples
-#' # Aggregates every 100 rows in each data frame.
-#' \dontrun{dat <- aggregateData(dat, n = 100)}
-#' # Aggregates every 60 rows in each data frame.
-#' \dontrun{dat <- aggregateData(dat, n = 60)}
+#' # Aggregates every 5 rows in each data frame. Must be used after
+#' # cleanNames()
+#' \dontshow{
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#'  }
+#'  servosphere <- aggregateData(servosphere, n = 5)
 #' @export
 #' @import dplyr
 #' @importFrom stats aggregate
@@ -194,20 +209,49 @@ aggregateData <- function(list, n){
 #' @return Returns the list of data frames provided which have been merged with
 #'   additional relevant trial information.
 #' @examples
-#' # Merge the columns \code{id}, \code{treatment}, and \code{date} from the
-#' # trial_record data frame with all the data frames in our list \code{dat}.
-#' \dontrun{dat <- mergeTrialInfo(dat, trial_record, c("id", "treatment", "date"))}
+#' \dontshow{
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#'  trial_record <- data.frame(id = c(1, 2),
+#'                             treatment = c("a", "b"),
+#'                             date = c("2032018", "2042018"),
+#'                             time = c("13:30", "07:30"))
+#'  trial_id_split <- data.frame(id = c(1, 2, 1, 2),
+#'                               stimulus = c(1, 1, 2, 2),
+#'                               treatment = c("a", "b", "a", "b"),
+#'                               date = rep(c("2032018", "2042018"), times = 2),
+#'                               time = rep(c("13:30", "07:30"), times = 2),
+#'                               id_stim = c("1_1", "2_1", "1_2", "2_2"))
+#'  }
+#' # Merge the columns id, treatment, and date from the trial_record data frame
+#' # with all the data frames in our list servosphere.
+#'  merged_servosphere <- mergeTrialInfo(servosphere,
+#'    trial_record,
+#'    col.names = c("id", "treatment"),
+#'    stimulus.keep = c(0, 1))
 #'
-#' # Repeat of the merger above without retaining the \code{id} column while
+#' # Repeat of the merger above without retaining the id column while
 #' # also splitting the data provided into separate data frames based on the
 #' # different stimuli recorded, keeping only data associated with stimuli 1 and
 #' # 2. Splitting based on stimulus requires a column in the trial.data data
-#' # frame titled \code{id_stim}.
-#' \dontrun{dat <- mergeTrialInfo(dat_stim_split,
-#'  trial_id_split,
-#'  c("treatment", "date"),
-#'  stimulus.split = TRUE,
-#'  stimulus.keep = c(1, 2))}
+#' # frame titled id_stim.
+#'  merged_servosphere <- mergeTrialInfo(servosphere,
+#'      trial_id_split,
+#'      col.names = c("id", "treatment"),
+#'      stimulus.split = TRUE,
+#'      stimulus.keep = c(0, 1))
 #' @export
 #' @import dplyr purrr
 #' @importFrom rlang .data
