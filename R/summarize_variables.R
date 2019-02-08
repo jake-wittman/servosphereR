@@ -4,8 +4,8 @@
 #'
 #' Determine the total distance of a path taken by an organism on a servosphere.
 #'
-#' @param list A list of data frames, each of which has a column representing dx
-#'   and dy.
+#' @param list A list of data frames, each of which has a column recording the
+#'   distance moved during each recording period.
 #' @param summary.df The data frame object within which you are storing path
 #'   summary variables. The default is NA if you do not currently have a summary
 #'   data frame object started. When set to NA the function will create a new
@@ -16,9 +16,35 @@
 #'   numbers are ordered and named as they are in the data frames list.
 #' @examples
 #' # If a summary data frame has not been started
-#' \dontrun{summary_df <- summaryTotalDistance(dat, summary.df = NA)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#'
+#' servosphere <- calcDistance(servosphere)
+#'
+#' summary_df <- summaryTotalDistance(servosphere, summary.df = NA)
+#'
 #' # If a summary data frame has been started
-#' \dontrun{summary_df <- summaryTotalDistance(dat, summary.df = summary_df)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0))
+#'
+#' summary_df <- summaryTotalDistance(servosphere, summary.df = summary_df)
+#'
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -91,9 +117,33 @@ summaryTotalDistance <- function(list, summary.df = NA) {
 #'   are in the data frames list.
 #' @examples
 #' # If a summary data frame has not been started
-#' \dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = NA)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcXY(servosphere)
+#'
+#' summary_df <- summaryNetDisplacement(servosphere, summary.df = NA)
+#'
 #' # If a summary data frame has been started
-#' \dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = summary_df)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0))
+#'
+#' summary_df <- summaryNetDisplacement(servosphere, summary.df = summary_df)}
 #'
 #' @export
 #' @import dplyr
@@ -173,15 +223,25 @@ summaryNetDisplacement <- function(list, summary.df = NA) {
 #'   they are in the data frames list.
 #' @examples
 #' # Calculate tortuosity as the ratio of net displacement to total distance
-#' \dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
-#'  total.distance = total_distance,
-#'   net.displacement = net_displacement)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0),
+#'                          total_distance = runif(2, 11, 20),
+#'                          net_displacement = runif(2, 5, 10))
+#'
+#' summary_df <- summaryTortuosity(summary.df = summary_df,
+#'   total.distance = total_distance,
+#'   net.displacement = net_displacement)
+#'
 #' # Calculate tortuosity as the ratio of total distance to net displacement
 #' # (the opposite of the previous example)
-#' \dontrun{summary_df <- summaryTortuosity(summary.df = summary_df,
-#'  total.distance = total_distance,
+#'
+#' summary_df <- summaryTortuosity(summary.df = summary_df,
+#'   total.distance = total_distance,
 #'   net.displacement = net_displacement,
-#'    inverse = TRUE)}
+#'   inverse = TRUE)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -214,16 +274,42 @@ summaryTortuosity <- function(summary.df,
 #' servosphere data, 0/360 will correspond to the  movement in the direction of
 #' the positive y-axis.
 #' @param list A list of data frames, each of which has a column for bearing.
-#' @param summary.df The summary data frame containing total distance and net
-#'   displacement for all movement paths
+#' @param summary.df The summary data frame containing a column recording
+#'   the bearing of each recorded movement.
 #' @return A list of two named vectors. The first named vector contains the
 #'   average bearing calculated for each movement path. The second named vector
 #'   contains the rho, a measure of concentration for the average bearing.
 #' @examples
 #' # If a summary data frame has not been started
-#' \dontrun{summary_df <- summaryAvgBearing(dat, summary.df = NA)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      c("id", "treatment", "date))
+#' names(servosphere) <- c("1", "2", "col.names")
+#' servosphere <- calcXY(servosphere)
+#' servosphere <- calcBearing(servosphere)
+#' summary_df <- summaryAvgBearing(servosphere, summary.df = NA)
+#'
 #' # If a summary data frame has been started
-#' \dontrun{summary_df <- summaryAvgBearing(dat, summary.df = summary_df)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0))
+#'
+#' summary_df <- summaryAvgBearing(servosphere, summary.df = summary_df)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -296,7 +382,7 @@ summaryAvgBearing <- function(list, summary.df = NA) {
                   slice(1)
             })
          trial_cols <- trial_cols %>%
-            magrittr::extract(-length(.data)) %>%
+            magrittr::extract(1:((length(.data) - 1))) %>%
             bind_rows
          out <- bind_cols(out, trial_cols)
       } else {
@@ -307,7 +393,7 @@ summaryAvgBearing <- function(list, summary.df = NA) {
                   slice(1)
             })
          trial_cols <- trial_cols %>%
-            magrittr::extract(-length(.data)) %>%
+            magrittr::extract(1:((length(.data) - 1))) %>%
             bind_rows
          out <- bind_cols(out, trial_cols)
       }
@@ -322,7 +408,7 @@ summaryAvgBearing <- function(list, summary.df = NA) {
 #'
 #' Calculate the average velocity for a movement path. The units on velocity are
 #' equal to the distance units used to record the data per second.
-#' @param list A list of data frames, each of which has a column for bearing.
+#' @param list A list of data frames, each of which has a column for velocity.
 #' @param summary.df The data frame object within which you are storing path
 #'   summary variables. The default is NA if you do not currently have a summary
 #'   data frame object started. When set to \code{NA} the function will create a new
@@ -332,9 +418,33 @@ summaryAvgBearing <- function(list, summary.df = NA) {
 #'   \code{NA}
 #' @examples
 #' # If a summary data frame has not been started
-#' \dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = NA)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcVelocity(servosphere)
+#'
+#' summary_df <- summaryAvgVelocity(servosphere, summary.df = NA)
 #' # If a summary data frame has been started
-#' \dontrun{summary_df <- summaryAvgVelocity(dat, summary.df = summary_df)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0))
+#'
+#' summary_df <- summaryAvgVelocity(servosphere, summary.df = summary_df)
+#'
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -410,14 +520,40 @@ summaryAvgVelocity <- function(list, summary.df = NA) {
 #' @examples
 #' # If a summary data frame has not been started with movement less than 0.1
 #' # cm/s qualifying as a stop
-#' \dontrun{summary_df <- summaryStops(dat,
-#'  summary.df = NA,
-#'   stop.threshold = 0.1)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#'
+#' servosphere <- calcVelocity(servosphere)
+#'
+#' summary_df <- summaryStops(servosphere,
+#'                            summary.df = NA,
+#'                            stop.threshold = 0.1)
+#'
 #' # If a summary data frame has been started with movement less than 0.05 cm/s
 #' # qualifying as a stop
-#' \dontrun{summary_df <- summaryStops(dat,
-#'  summary.df = NA,
-#'   stop.threshold = 0.05)}
+#'
+#' summary_df <- data.frame(id = c(1, 2),
+#'                          treatment = c("a", "b"),
+#'                          date = c("2032018", "2042018"),
+#'                          stimulus = c(0, 0))
+#'
+#'
+#' summary_df <- summaryStops(servosphere,
+#'                            summary.df = summary_df,
+#'                            stop.threshold = 0.05)}
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%

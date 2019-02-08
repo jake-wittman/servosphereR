@@ -9,8 +9,8 @@ summaryAvgBearing(list, summary.df = NA)
 \arguments{
 \item{list}{A list of data frames, each of which has a column for bearing.}
 
-\item{summary.df}{The summary data frame containing total distance and net
-displacement for all movement paths}
+\item{summary.df}{The summary data frame containing a column recording
+the bearing of each recorded movement.}
 }
 \value{
 A list of two named vectors. The first named vector contains the
@@ -25,10 +25,4 @@ The bearing is the direction of movement and and falls between 0 and 360.
 Outdoors degree measures of 0/360 will typically correspond to due north. For
 servosphere data, 0/360 will correspond to the  movement in the direction of
 the positive y-axis.
-}
-\examples{
-# If a summary data frame has not been started
-\dontrun{summary_df <- summaryAvgBearing(dat, summary.df = NA)}
-# If a summary data frame has been started
-\dontrun{summary_df <- summaryAvgBearing(dat, summary.df = summary_df)}
 }

@@ -3,7 +3,17 @@ Type: Package
 Title: Analyze Data Generated from Syntech Servosphere Trials
 Version: 0.1.0
 Authors@R: c(person("Jacob T.", "Wittman", email = "wittja01@gmail.com", role = c("aut", "cre")), person("Brian H.", "Aukema", role = "ctb"))
-Description: Functions that facilitate and speed up the analysis of data produced by a servosphere. This package is also designed to make working with data produced from a servosphere easy for someone new to or unfamiliar with R. 
+Description: Functions that facilitate and speed up the analysis of data
+    produced by a servosphere. This package is designed to make working
+    with data produced from a servosphere easy for someone new to or unfamiliar
+    with R. The functions provided in this package fall into three broad-use
+    categories: functions for cleaning raw data produced by the servosphere
+    software, functions for deriving movement variables based on position data,
+    and functions for summarizing movement variables for easier analysis. These
+    functions are built with functions from the tidyverse package to work
+    efficiently, as a single servosphere file may consist of hundreds of
+    thousands of rows of data and a user may wish to analyze hundreds of files
+    at a time.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -17,6 +27,8 @@ Imports:
    magrittr (>= 1.5),
    rlang (>= 0.3),
    stats (>= 3.4)
+Depends:
+   R (>= 2.10)
 Suggests: 
     knitr,
     rmarkdown,

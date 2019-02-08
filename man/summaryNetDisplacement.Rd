@@ -29,10 +29,3 @@ Net displacement is the distance between the start of a path and the end of a
 path. This function calculates the net displacement for a path recorded from
 the servosphere.
 }
-\examples{
-# If a summary data frame has not been started
-\dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = NA)}
-# If a summary data frame has been started
-\dontrun{summary_df <- summaryNetDisplacement(dat, summary.df = summary_df)}
-
-}

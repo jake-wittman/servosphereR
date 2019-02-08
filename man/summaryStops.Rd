@@ -34,15 +34,3 @@ be much slower than actual movement. Estimates of this threshold speed can be
 obtained by comparing recordings of the data to videos of the actual movement
 or in person observation.
 }
-\examples{
-# If a summary data frame has not been started with movement less than 0.1
-# cm/s qualifying as a stop
-\dontrun{summary_df <- summaryStops(dat,
- summary.df = NA,
-  stop.threshold = 0.1)}
-# If a summary data frame has been started with movement less than 0.05 cm/s
-# qualifying as a stop
-\dontrun{summary_df <- summaryStops(dat,
- summary.df = NA,
-  stop.threshold = 0.05)}
-}

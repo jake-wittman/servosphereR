@@ -5,15 +5,15 @@ source("./R/fetch_clean_functions.R")
 source("./R/servosphereR.R")
 source("./R/summarize_variables.R")
 # Test without stimulus split
-dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere.csv")
+dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere")
 trial_id <- read.csv("./inst/extdata/trial_id.csv", stringsAsFactors = FALSE)
 dat <- cleanNames(dat,
               colnames = c("stimulus",
                            "dT",
                            "dx",
                            "dy"))
-dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"), stimulus.keep = c(1))
-dat <- aggregateData(dat, n = 100)
+dat <- mergeTrialInfo(dat, trial_id, c("id", "treatment", "date"), stimulus.keep = c(0, 1))
+dat <- aggregateData(dat, n = 2)
 dat <- calcXY(dat)
 dat <- calcDistance(dat)
 dat <- calcBearing(dat)

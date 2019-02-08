@@ -9,7 +9,21 @@
 #' @param list A list of data frame objects with columns dx and dy.
 #' @return Converts dx and dy values to (x, y) coordinates.
 #' @examples
-#' \dontrun{dat <- calcXY(dat) # Calculate (x, y) coordinate pairs}
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcXY(servosphere)
 #' @export
 
 
@@ -33,7 +47,21 @@ calcXY <- function(list) {
 #' @return A list of data frames, each of which has a variable for the distance
 #'   moved between each data recording.
 #' @examples
-#' \dontrun{dat <- calcDistance(dat)}
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcDistance(servosphere)
 #' @export
 
 calcDistance <- function(list) {
@@ -81,7 +109,24 @@ atan3 <- function(x, y) {
 #'   at each time step.
 #' @examples
 #' # Provide a list of data frames with two columns for the (x, y) coordinates
-#' \dontrun{dat <- calcBearing(dat)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcXY(servosphere)
+#'
+#' servosphere <- calcBearing(servosphere)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -122,7 +167,24 @@ calcBearing <- function(list) {
 #' @return A list of data frames that each contain a column for turn angle.
 #' @examples
 #' # Provide a data frame that includes a column with bearing data
-#' \dontrun{dat <- calcTurnAngle(dat)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcXY(servosphere)
+#' servosphere <- calcBearing(servosphere)
+#' servosphere <- calcTurnAngle(servosphere)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -153,7 +215,25 @@ calcTurnAngle <- function(list) {
 #' @return A list of data frames that each contain a column for turn velocity.
 #' @examples
 #' # Provide data previously processed by the calcTurnAngle function
-#' \dontrun{dat <- calcTurnVelocity(dat)}
+#'
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#' servosphere <- calcXY(servosphere)
+#' servosphere <- calcBearing(servosphere)
+#' servosphere <- calcTurnAngle(servosphere)
+#' servosphere <- calcTurnVelocity(servosphere)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
@@ -182,7 +262,22 @@ calcTurnVelocity <- function(list) {
 #'   dx, and dy.
 #' @return A list of data frames that each contain a column for velocity.
 #' @examples
-#' \dontrun{dat <- calcVelocity(dat)}
+#'  servosphere <- list(data.frame(id = rep(1, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("a", 200),
+#'                                 date = rep("2032018", 200)),
+#'                      data.frame(id = rep(2, 200),
+#'                                 stimulus = rep(c(0, 1), each = 100),
+#'                                 dT = sample(8:12, 200, replace = TRUE),
+#'                                 dx = runif(200, 0, 5),
+#'                                 dy = runif(200, 0, 5),
+#'                                 treatment = rep("b", 200),
+#'                                 date = rep("2032018", 200)))
+#'
+#' servosphere <- calcVelocity(servosphere)
 #' @export
 #' @import dplyr
 #' @importFrom magrittr %>%
