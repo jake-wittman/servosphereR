@@ -1,5 +1,6 @@
-## Resubmission
-This is a resubmission. In this version I expanded the Description field in my DESCRIPTION file to provide more details about the analysis tools in this package. A link to the Syntech website was included in the DESCRIPTION file, as well as links to sources that provided inspiration for the development of this package and detail some of the methods involved in studying the movement behavior of insects.
+## Patch
+This is a small patch to my package.It was brought to my attention that some of
+the help documentation was not readable due to an error in writing them.
 
 ## Test environments
 * win-builder (devel and release)
