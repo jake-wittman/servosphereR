@@ -11,5 +11,4 @@ There were no ERRORs or WARNINGs.
 
 R-hub flagged possible misspellings in a NOTE. These are not misspelled.
 
-This is a new submission.
 
