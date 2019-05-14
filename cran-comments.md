@@ -4,7 +4,7 @@ the help documentation was not readable due to an error in writing them.
 
 ## Test environments
 * win-builder (devel and release)
-* ubuntu 14.04 (on travis-ci), R 3.5.2
+* ubuntu 14.04 (on travis-ci), R 3.6.0
 
 # R CMD check results
 There were no ERRORs or WARNINGs.
