@@ -80,12 +80,12 @@ cleanNames <- function(list, colnames) {
 #' the data by aggregating rows reduces this noise. Aggregating also reduces the
 #' size of the data files, making future computing tasks faster.
 #'
-#' To aggregate the data properly, we recommend watching recordings of the target
-#' organism moving on the servosphere and determine the length of time it takes
-#' the insect to move at least 50% of its body length. Use the time it takes the
-#' insect to move at least 50% of its body length as the minimum aggregation time.
-#' Longer periods may be necessary depending on the size and movement of the
-#' insect.
+#' To aggregate the data properly, we recommend watching recordings of the
+#' target organism moving on the servosphere and determine the length of time it
+#' takes the insect to move at least 50 percent of its body length. Use the time
+#' it takes the insect to move at least 50 percent of its body length as the
+#' minimum aggregation time. Longer periods may be necessary depending on the
+#' size and movement of the insect.
 #'
 #' The resulting data frames will have an additional column named "length". The
 #' values in length should be approximately equal to the sum of dT from the n
