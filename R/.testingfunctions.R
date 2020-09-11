@@ -4,6 +4,9 @@ source("./R/derived_variables.R")
 source("./R/fetch_clean_functions.R")
 source("./R/servosphereR.R")
 source("./R/summarize_variables.R")
+conflict_prefer("filter", "dplyr")
+conflict_prefer("lag", "dplyr")
+
 # Test without stimulus split
 dat <- getFiles(path = "./inst/extdata/", pattern = "_servosphere")
 trial_id <- read.csv("./inst/extdata/trial_id.csv", stringsAsFactors = FALSE)

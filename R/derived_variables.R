@@ -135,8 +135,8 @@ calcBearing <- function(list) {
    list %>% purrr::map_if(is.data.frame, function(.x) {
       dplyr::mutate(.x,
                     ang = atan3(
-                       lead(.x$x, default = NA) - lag(.x$x, 0, default = NA),
-                       lead(.x$y, default = NA) - lag(.x$y, 0, default = NA)
+                       dplyr::lead(.x$x, default = NA) - dplyr::lag(.x$x, 0, default = NA),
+                       dplyr::lead(.x$y, default = NA) - dplyr::lag(.x$y, 0, default = NA)
                     ))
    }) %>%
       purrr::map_if(is.data.frame, function(.x) {
